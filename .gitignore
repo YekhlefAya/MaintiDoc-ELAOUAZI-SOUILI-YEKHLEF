@@ -49,10 +49,9 @@ postgres_data/
 .DS_Store
 Thumbs.db
 
-# Classroom Deliverable Archive & Submissions (deposited on Classroom, not git)
+# Classroom Deliverable Archive & Submissions (deposited on Classroom)
 *.zip
 L1_MaintiDoc_*/
-L1_MaintiDoc_*_Rapport.pdf
 L1_MaintiDoc_*_LienGitHub.txt
 
 # Test outputs & caches

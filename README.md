@@ -53,6 +53,7 @@ Arborescence minimale attendue et respectée :
 maintidoc/
 ├── README.md
 ├── .gitignore
+├── L1_MaintiDoc_ELAOUAZI-SOUILI-YEKHLEF_Rapport.pdf   # Rapport d'ingénierie officiel (15 pages)
 └── corpus/
     ├── inventaire.csv                      # Registre d'inventaire complet synchronisé (20 colonnes)
     ├── prompts_corpus.md                   # Historique des prompts P01-P13 et validation critique
