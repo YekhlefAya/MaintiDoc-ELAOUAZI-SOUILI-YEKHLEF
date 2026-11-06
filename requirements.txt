@@ -1,0 +1,32 @@
+# ==============================================================================
+# MAINTIDOC — Environnement Reproductible (Livrable 2 / EMSI 2026)
+# ==============================================================================
+
+# Traitement Documentaire, PDF et OCR
+pymupdf>=1.23.0
+pypdf>=4.0.0
+pillow>=10.0.0
+pytesseract>=0.3.10
+
+# Recherche Vectorielle, Embeddings & Reranker
+qdrant-client>=1.8.0
+sentence-transformers>=2.5.0
+torch>=2.1.0
+
+# API Backend & Interface Utilisateur
+fastapi>=0.110.0
+uvicorn>=0.28.0
+streamlit>=1.32.0
+pydantic>=2.6.0
+
+# Orchestration Agentique & Serveur MCP
+langchain>=0.1.15
+langgraph>=0.0.35
+mcp>=0.1.0
+
+# Qualité, Tests et MLOps
+pytest>=8.0.0
+python-dotenv>=1.0.0
+reportlab>=4.1.0
+matplotlib>=3.8.0
+
