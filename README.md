@@ -49,7 +49,10 @@ L1_MaintiDoc_ELAOUAZI-SOUILI-YEKHLEF.zip
 
 ## 4. Structure du Dépôt GitHub
 
-Le dépôt Git de l'équipe est accessible à l'enseignante à l'adresse renseignée dans `LienGitHub.txt` et présente l'arborescence requise :
+Le dépôt Git de l'équipe est accessible à l'enseignante à l'adresse suivante :  
+**URL officielle :** https://github.com/YekhlefAya/MaintiDoc-ELAOUAZI-SOUILI-YEKHLEF.git  
+
+Arborescence minimale attendue et respectée :
 
 ```text
 maintidoc/

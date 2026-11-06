@@ -1,7 +1,8 @@
 import os
+import csv
 from reportlab.lib.pagesizes import A4
 from reportlab.platypus import (
-    SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, Image as RLImage, KeepTogether, HRFlowable
+    SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, Image as RLImage, KeepTogether
 )
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib import colors
@@ -31,22 +32,23 @@ class NumberedCanvas(canvas.Canvas):
 
         self.saveState()
         self.setFont("Helvetica-Bold", 8)
-        self.setFillColor(colors.HexColor("#1E3A8A"))
-        self.drawString(54, 802, "MaintiDoc — Livrable 1 : Cadrage, Corpus et Architecture")
+        self.setFillColor(colors.HexColor("#0F172A"))
+        self.drawString(45, 804, "MaintiDoc — Livrable 1 : Cadrage, Corpus et Architecture Cible")
         
         self.setFont("Helvetica", 8)
         self.setFillColor(colors.HexColor("#64748B"))
-        self.drawRightString(558, 802, "EMSI 2026 | ELAOUAZI · SOUILI · YEKHLEF")
+        self.drawRightString(550, 804, "EMSI 2026 | ELAOUAZI · SOUILI · YEKHLEF")
         
         self.setStrokeColor(colors.HexColor("#CBD5E1"))
         self.setLineWidth(0.6)
-        self.line(54, 796, 558, 796)
+        self.line(45, 798, 550, 798)
 
         # Footer
-        self.line(54, 46, 558, 46)
-        self.drawString(54, 34, "Projet d'IA Générative Multimodale — Confidentiel Enseignement")
+        self.line(45, 42, 550, 42)
+        self.setFont("Helvetica", 7.5)
+        self.drawString(45, 30, "Module IA Générative Multimodale — Dossier d'Ingénierie & d'Architecture")
         page_str = f"Page {self._pageNumber} sur {page_count}"
-        self.drawRightString(558, 34, page_str)
+        self.drawRightString(550, 30, page_str)
         self.restoreState()
 
 
@@ -56,20 +58,20 @@ def build_pdf(filename="L1_MaintiDoc_ELAOUAZI-SOUILI-YEKHLEF_Rapport.pdf"):
         pagesize=A4,
         rightMargin=45,
         leftMargin=45,
-        topMargin=50,
-        bottomMargin=50
+        topMargin=52,
+        bottomMargin=48
     )
 
     styles = getSampleStyleSheet()
 
-    # Custom styles
-    c_primary = colors.HexColor('#1E3A8A')    # Deep Blue
-    c_secondary = colors.HexColor('#0D9488')  # Teal
-    c_dark = colors.HexColor('#0F172A')       # Slate Dark
-    c_text = colors.HexColor('#334155')       # Body text
-    c_muted = colors.HexColor('#64748B')      # Muted text
-    c_bg_light = colors.HexColor('#F8FAFC')   # Light background
-    c_border = colors.HexColor('#E2E8F0')     # Border color
+    # Premium Palette
+    c_navy = colors.HexColor('#0F172A')       # Dark Slate / Navy
+    c_blue = colors.HexColor('#1E3A8A')       # Deep Blue
+    c_teal = colors.HexColor('#0D9488')       # Dark Teal
+    c_text = colors.HexColor('#1E293B')       # Readable body text
+    c_muted = colors.HexColor('#475569')      # Muted text
+    c_border = colors.HexColor('#CBD5E1')     # Clean borders
+    c_bg_subtle = colors.HexColor('#F8FAFC')  # Background light
     c_alert = colors.HexColor('#DC2626')      # Red alert
 
     # Typography styles
@@ -77,9 +79,9 @@ def build_pdf(filename="L1_MaintiDoc_ELAOUAZI-SOUILI-YEKHLEF_Rapport.pdf"):
         'CoverTitle',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=24,
+        fontSize=25,
         leading=30,
-        textColor=c_primary,
+        textColor=c_navy,
         alignment=1,
         spaceAfter=10
     )
@@ -90,7 +92,7 @@ def build_pdf(filename="L1_MaintiDoc_ELAOUAZI-SOUILI-YEKHLEF_Rapport.pdf"):
         fontName='Helvetica',
         fontSize=12,
         leading=16,
-        textColor=c_muted,
+        textColor=c_teal,
         alignment=1,
         spaceAfter=25
     )
@@ -99,11 +101,11 @@ def build_pdf(filename="L1_MaintiDoc_ELAOUAZI-SOUILI-YEKHLEF_Rapport.pdf"):
         'Heading1_Custom',
         parent=styles['Heading1'],
         fontName='Helvetica-Bold',
-        fontSize=15,
-        leading=18,
-        textColor=c_primary,
-        spaceBefore=14,
-        spaceAfter=8,
+        fontSize=14,
+        leading=17,
+        textColor=c_blue,
+        spaceBefore=12,
+        spaceAfter=6,
         keepWithNext=True
     )
 
@@ -111,10 +113,10 @@ def build_pdf(filename="L1_MaintiDoc_ELAOUAZI-SOUILI-YEKHLEF_Rapport.pdf"):
         'Heading2_Custom',
         parent=styles['Heading2'],
         fontName='Helvetica-Bold',
-        fontSize=11.5,
-        leading=15,
-        textColor=c_secondary,
-        spaceBefore=10,
+        fontSize=11,
+        leading=14,
+        textColor=c_navy,
+        spaceBefore=9,
         spaceAfter=4,
         keepWithNext=True
     )
@@ -123,10 +125,10 @@ def build_pdf(filename="L1_MaintiDoc_ELAOUAZI-SOUILI-YEKHLEF_Rapport.pdf"):
         'Heading3_Custom',
         parent=styles['Heading3'],
         fontName='Helvetica-Bold',
-        fontSize=9.5,
-        leading=13,
-        textColor=c_dark,
-        spaceBefore=6,
+        fontSize=9,
+        leading=12,
+        textColor=c_teal,
+        spaceBefore=5,
         spaceAfter=2,
         keepWithNext=True
     )
@@ -135,10 +137,10 @@ def build_pdf(filename="L1_MaintiDoc_ELAOUAZI-SOUILI-YEKHLEF_Rapport.pdf"):
         'Body_Custom',
         parent=styles['Normal'],
         fontName='Helvetica',
-        fontSize=8.5,
-        leading=11.5,
+        fontSize=8.3,
+        leading=11.3,
         textColor=c_text,
-        spaceAfter=5
+        spaceAfter=4
     )
 
     s_body_bold = ParagraphStyle(
@@ -151,12 +153,12 @@ def build_pdf(filename="L1_MaintiDoc_ELAOUAZI-SOUILI-YEKHLEF_Rapport.pdf"):
         'Bullet_Custom',
         parent=styles['Normal'],
         fontName='Helvetica',
-        fontSize=8.5,
-        leading=11.5,
+        fontSize=8.3,
+        leading=11.3,
         textColor=c_text,
-        leftIndent=15,
-        firstLineIndent=-10,
-        spaceAfter=3
+        leftIndent=12,
+        firstLineIndent=-8,
+        spaceAfter=2.5
     )
 
     s_callout = ParagraphStyle(
@@ -164,17 +166,17 @@ def build_pdf(filename="L1_MaintiDoc_ELAOUAZI-SOUILI-YEKHLEF_Rapport.pdf"):
         parent=styles['Normal'],
         fontName='Helvetica',
         fontSize=8,
-        leading=11,
-        textColor=colors.HexColor('#1E293B')
+        leading=10.8,
+        textColor=colors.HexColor('#0F172A')
     )
 
     s_table_cell = ParagraphStyle(
         'TableCell',
         parent=styles['Normal'],
         fontName='Helvetica',
-        fontSize=7.5,
-        leading=10,
-        textColor=c_dark
+        fontSize=7.3,
+        leading=9.8,
+        textColor=c_navy
     )
 
     s_table_cell_bold = ParagraphStyle(
@@ -187,8 +189,8 @@ def build_pdf(filename="L1_MaintiDoc_ELAOUAZI-SOUILI-YEKHLEF_Rapport.pdf"):
         'TableHeader',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=8,
-        leading=10.5,
+        fontSize=7.8,
+        leading=10,
         textColor=colors.white,
         alignment=1
     )
@@ -197,71 +199,70 @@ def build_pdf(filename="L1_MaintiDoc_ELAOUAZI-SOUILI-YEKHLEF_Rapport.pdf"):
         'CodeStyle',
         parent=styles['Normal'],
         fontName='Courier',
-        fontSize=7.5,
-        leading=9.5,
+        fontSize=7.2,
+        leading=9.2,
         textColor=colors.HexColor('#0F172A')
     )
 
     story = []
 
-    def make_box(content_list, bg_color='#F1F5F9', border_color='#CBD5E1', padding=6):
-        tbl = Table([[content_list]], colWidths=[508])
+    def make_box(content_list, bg_color='#F8FAFC', border_color='#CBD5E1', padding=5):
+        tbl = Table([[content_list]], colWidths=[505])
         tbl.setStyle(TableStyle([
             ('BACKGROUND', (0,0), (-1,-1), colors.HexColor(bg_color)),
             ('BOX', (0,0), (-1,-1), 1, colors.HexColor(border_color)),
             ('TOPPADDING', (0,0), (-1,-1), padding),
             ('BOTTOMPADDING', (0,0), (-1,-1), padding),
-            ('LEFTPADDING', (0,0), (-1,-1), padding + 2),
-            ('RIGHTPADDING', (0,0), (-1,-1), padding + 2),
+            ('LEFTPADDING', (0,0), (-1,-1), padding + 3),
+            ('RIGHTPADDING', (0,0), (-1,-1), padding + 3),
         ]))
         return tbl
 
     # =========================================================================
-    # PAGE 1 : PAGE DE GARDE / TITRE OFFICIEL
+    # PAGE 1 : PAGE DE GARDE / DOSSIER D'INGÉNIERIE OFFICIEL
     # =========================================================================
-    story.append(Spacer(1, 40))
-    # School & Module badge
+    story.append(Spacer(1, 25))
     badge_data = [
-        [Paragraph("<b>ÉCOLE MAROCAINE DES SCIENCES DE L'INGÉNIEUR — EMSI 2026</b>", 
-                   ParagraphStyle('B1', parent=s_body_bold, fontSize=9, alignment=1, textColor=colors.HexColor('#1E3A8A')))],
-        [Paragraph("Filière Ingénierie Informatique & Intelligence Artificielle | Module IA Générative Multimodale",
+        [Paragraph("<b>ÉCOLE MAROCAINE DES SCIENCES DE L'INGÉNIEUR — EMSI CASABLANCA</b>", 
+                   ParagraphStyle('B1', parent=s_body_bold, fontSize=9.5, alignment=1, textColor=colors.HexColor('#0F172A')))],
+        [Paragraph("Cycle Ingénieur en Informatique & Intelligence Artificielle | Module IA Générative Multimodale",
                    ParagraphStyle('B2', parent=s_body, fontSize=8, alignment=1, textColor=c_muted))]
     ]
-    t_badge = Table(badge_data, colWidths=[508])
+    t_badge = Table(badge_data, colWidths=[505])
     t_badge.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#EFF6FF')),
-        ('BOX', (0,0), (-1,-1), 1.5, colors.HexColor('#3B82F6')),
+        ('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#F1F5F9')),
+        ('BOX', (0,0), (-1,-1), 1.2, colors.HexColor('#94A3B8')),
         ('TOPPADDING', (0,0), (-1,-1), 8),
         ('BOTTOMPADDING', (0,0), (-1,-1), 8),
     ]))
     story.append(t_badge)
-    story.append(Spacer(1, 55))
+    story.append(Spacer(1, 45))
 
     story.append(Paragraph("PROJET MAINTIDOC", s_title))
-    story.append(Paragraph("Assistant Documentaire Multimodal et Agentique pour la Maintenance Automobile", 
-                           ParagraphStyle('Sub1', parent=s_title, fontSize=14, leading=18, textColor=c_secondary)))
-    story.append(Spacer(1, 10))
-    story.append(Paragraph("LIVRABLE 1 : CADRAGE, CORPUS ET ARCHITECTURE CIBLE", 
-                           ParagraphStyle('L1Tag', parent=s_subtitle, fontName='Helvetica-Bold', fontSize=11, textColor=c_dark)))
-    story.append(Paragraph("Recherche documentaire sourcée, vision par ordinateur, interfaçage MCP et sécurité agentique", s_subtitle))
+    story.append(Paragraph("Assistant Documentaire Multimodal et Agentique pour la Maintenance Automobile", s_subtitle))
+    story.append(Spacer(1, 5))
+    story.append(Paragraph("<b>LIVRABLE 1 : CADRAGE TECHNIQUE, CORPUS ET ARCHITECTURE CIBLE</b>", 
+                           ParagraphStyle('L1Tag', parent=s_body_bold, fontSize=11, alignment=1, textColor=c_blue)))
+    story.append(Paragraph("Cahier des charges initial, pipeline d'ingestion vérifié, interfaçage MCP et modèle de sécurité", 
+                           ParagraphStyle('L1Sub', parent=s_body, fontSize=9, alignment=1, textColor=c_muted)))
     
-    story.append(Spacer(1, 40))
+    story.append(Spacer(1, 35))
 
-    # Meta team table
+    # Meta team table with official GitHub link
     team_table_data = [
-        [Paragraph("<b>Équipe projet :</b>", s_table_cell_bold), Paragraph("<b>ELAOUAZI - SOUILI - YEKHLEF</b>", s_table_cell_bold)],
-        [Paragraph("<b>Composition de l'équipe :</b>", s_table_cell), 
-         Paragraph("• <b>ELAOUAZI Hafsa</b> — hafsa.elaouazi@emsi-edu.ma (Lead Évaluation, Sécurité & Corpus)<br/>"
-                   "• <b>SOUILI Wiam</b> — wiam.souili@emsi-edu.ma (Lead Architecture & Intégration Agentique)<br/>"
-                   "• <b>YEKHLEF Aya</b> — aya.yekhlef@emsi-edu.ma (Lead RAG Multimodal & Recherche Vectorielle)", s_table_cell)],
-        [Paragraph("<b>Encadrante :</b>", s_table_cell_bold), Paragraph("<b>Pr. Mariam CHERRABI</b>", s_table_cell)],
-        [Paragraph("<b>Familles d'équipements :</b>", s_table_cell_bold), Paragraph("1. Tableaux de bord (combinés & témoins) — 2. Pneumatiques & train roulant", s_table_cell)],
-        [Paragraph("<b>Dépôt GitHub officiel :</b>", s_table_cell_bold), Paragraph("https://github.com/WiamSouili/MaintiDoc-ELAOUAZI-SOUILI-YEKHLEF", s_code)],
-        [Paragraph("<b>Date de soumission :</b>", s_table_cell_bold), Paragraph("Novembre 2026 — Fin de Semaine 1", s_table_cell)]
+        [Paragraph("<b>Équipe d'ingénierie :</b>", s_table_cell_bold), Paragraph("<b>ELAOUAZI - SOUILI - YEKHLEF</b>", s_table_cell_bold)],
+        [Paragraph("<b>Membres du projet :</b>", s_table_cell), 
+         Paragraph("• <b>ELAOUAZI Hafsa</b> (Lead Évaluation, Sécurité des Prompts & Gestion du Corpus)<br/>"
+                   "• <b>SOUILI Wiam</b> (Lead Architecture Système, LangGraph & Interfaçage MCP)<br/>"
+                   "• <b>YEKHLEF Aya</b> (Lead RAG Multimodal, Ingestion ETL & Recherche Vectorielle)", s_table_cell)],
+        [Paragraph("<b>Enseignante responsable :</b>", s_table_cell_bold), Paragraph("<b>Pr. Mariam CHERRABI</b>", s_table_cell_bold)],
+        [Paragraph("<b>Périmètre matériel :</b>", s_table_cell_bold), Paragraph("Famille 1 : <b>Tableaux de bord (électronique/témoins)</b> — Famille 2 : <b>Pneumatiques (liaison au sol)</b>", s_table_cell)],
+        [Paragraph("<b>Dépôt Git de l'équipe :</b>", s_table_cell_bold), Paragraph("<b>https://github.com/YekhlefAya/MaintiDoc-ELAOUAZI-SOUILI-YEKHLEF.git</b>", s_code)],
+        [Paragraph("<b>Date de rendu :</b>", s_table_cell_bold), Paragraph("Novembre 2026 — Fin de Semaine 1", s_table_cell)]
     ]
-    t_team = Table(team_table_data, colWidths=[140, 368])
+    t_team = Table(team_table_data, colWidths=[135, 370])
     t_team.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#F8FAFC')),
+        ('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#FFFFFF')),
         ('BOX', (0,0), (-1,-1), 1, c_border),
         ('INNERGRID', (0,0), (-1,-1), 0.5, c_border),
         ('TOPPADDING', (0,0), (-1,-1), 6),
@@ -271,34 +272,35 @@ def build_pdf(filename="L1_MaintiDoc_ELAOUAZI-SOUILI-YEKHLEF_Rapport.pdf"):
     ]))
     story.append(t_team)
 
-    story.append(Spacer(1, 35))
+    story.append(Spacer(1, 30))
 
     exec_summary = (
-        "<b>Résumé exécutif du Livrable 1 :</b> Ce document fige les fondations conceptuelles, documentaires et techniques "
-        "du projet MaintiDoc avant le démarrage des développements. Il formalise le profil des utilisateurs d'atelier, cinq cas "
-        "d'usage représentatifs, les objectifs vérifiables et le hors-périmètre strict. Il présente un corpus multimodal de 45 "
-        "documents vérifiés couvrant les tableaux de bord et les pneumatiques (incluant cas contradictoires, injection de prompt et scans "
-        "OCR). L'architecture cible détaille sept blocs fonctionnels modulaires avec leurs points de contrôle (RBAC, Human-in-the-Loop, "
-        "citations vérifiées), les flux de données et une analyse exhaustive de neuf risques assortie d'une organisation d'équipe rigoureuse."
+        "<b>Note de cadrage exécutif :</b> Ce rapport établit le socle d'ingénierie préliminaire du projet MaintiDoc "
+        "avant toute phase de développement logiciel. Nous définissons ici les besoins stricts des techniciens d'atelier, "
+        "les cas d'usage nominaux et dégradés, et le périmètre d'action du système. Nous introduisons un corpus de 45 documents "
+        "techniques contrôlés et vérifiés manuellement couvrant les combinés de bord et le train roulant pneumatique. "
+        "L'architecture proposée repose sur une séparation claire entre la vision-langage (VLM), la recherche vectorielle "
+        "multimodale (Qdrant), l'orchestration par graphe d'états (LangGraph) et les outils d'atelier (MCP), assortie de "
+        "trois points de contrôle incontournables garantissant la sécurité des opérateurs et l'intégrité des données."
     )
-    story.append(make_box(Paragraph(exec_summary, s_callout), bg_color='#EFF6FF', border_color='#93C5FD'))
+    story.append(make_box(Paragraph(exec_summary, s_callout), bg_color='#F1F5F9', border_color='#94A3B8'))
 
     story.append(PageBreak())
 
     # =========================================================================
     # PAGE 2 : SOMMAIRE ET SECTION 2.1 - CADRAGE DU PROJET
     # =========================================================================
-    story.append(Paragraph("Table des Matières Synthétique", s_h2))
+    story.append(Paragraph("Sommaire du Rapport d'Ingénierie", s_h2))
     toc_data = [
-        [Paragraph("<b>2.1 Cadrage du projet</b> (Contexte, utilisateurs, cas d'usage, objectifs, périmètre, contraintes)", s_table_cell), Paragraph("Page 2-3", s_table_cell_bold)],
-        [Paragraph("<b>2.2 Constitution du corpus documentaire</b> (Corpus 45 docs, traçabilité IA, analyse critique, tests)", s_table_cell), Paragraph("Page 4-5", s_table_cell_bold)],
-        [Paragraph("<b>2.3 Architecture cible</b> (Schéma fonctionnel, fiches des blocs, points de contrôle, parcours requête)", s_table_cell), Paragraph("Page 6-8", s_table_cell_bold)],
-        [Paragraph("<b>2.4 Flux de données et modèle d'accès</b> (Ingestion ETL, requête RAG, workflow MCP, RBAC)", s_table_cell), Paragraph("Page 9-10", s_table_cell_bold)],
-        [Paragraph("<b>2.5 Analyse des risques</b> (Matrice de 9 risques : technique, sécurité, données, organisation)", s_table_cell), Paragraph("Page 11", s_table_cell_bold)],
-        [Paragraph("<b>2.6 Planning et organisation de l'équipe</b> (Rôles, feuille de route S2-S6, matrice RACI)", s_table_cell), Paragraph("Page 12-13", s_table_cell_bold)],
-        [Paragraph("<b>Annexes techniques</b> (Inventaire synthétique des 45 documents du corpus MaintiDoc)", s_table_cell), Paragraph("Page 14-15", s_table_cell_bold)],
+        [Paragraph("<b>2.1 Cadrage du projet</b> (Contexte métier, profils utilisateurs, cas d'usage, objectifs S6, périmètre)", s_table_cell), Paragraph("Pages 2-3", s_table_cell_bold)],
+        [Paragraph("<b>2.2 Constitution du corpus documentaire</b> (45 documents vérifiés, traçabilité de l'IA, analyse critique, tests)", s_table_cell), Paragraph("Pages 4-5", s_table_cell_bold)],
+        [Paragraph("<b>2.3 Architecture cible</b> (Schéma fonctionnel, fiches des 7 blocs, points de contrôle, parcours requête)", s_table_cell), Paragraph("Pages 6-8", s_table_cell_bold)],
+        [Paragraph("<b>2.4 Flux de données et modèle d'accès</b> (Pipelines d'ingestion, flux requête, cycle MCP, modèle RBAC)", s_table_cell), Paragraph("Pages 9-10", s_table_cell_bold)],
+        [Paragraph("<b>2.5 Analyse des risques</b> (Matrice de 9 risques : technique, sécurité, données et organisation)", s_table_cell), Paragraph("Page 11", s_table_cell_bold)],
+        [Paragraph("<b>2.6 Planning et organisation de l'équipe</b> (Répartition des spécialisations, feuille de route S2-S6, RACI)", s_table_cell), Paragraph("Pages 12-13", s_table_cell_bold)],
+        [Paragraph("<b>Annexes techniques</b> (Inventaire synthétique complet des 45 documents du corpus MaintiDoc)", s_table_cell), Paragraph("Pages 14-15", s_table_cell_bold)],
     ]
-    t_toc = Table(toc_data, colWidths=[420, 88])
+    t_toc = Table(toc_data, colWidths=[420, 85])
     t_toc.setStyle(TableStyle([
         ('BOX', (0,0), (-1,-1), 1, c_border),
         ('INNERGRID', (0,0), (-1,-1), 0.5, c_border),
@@ -306,71 +308,70 @@ def build_pdf(filename="L1_MaintiDoc_ELAOUAZI-SOUILI-YEKHLEF_Rapport.pdf"):
         ('BOTTOMPADDING', (0,0), (-1,-1), 3),
     ]))
     story.append(t_toc)
-    story.append(Spacer(1, 10))
+    story.append(Spacer(1, 8))
 
     story.append(Paragraph("2.1 Cadrage du Projet", s_h1))
     story.append(Paragraph("2.1.1 Contexte Opérationnel et Profils Utilisateurs", s_h2))
     story.append(Paragraph(
-        "Dans les ateliers modernes de maintenance automobile, les opérateurs font face à une complexité technologique "
-        "croissante : multiplication des calculateurs électroniques, combinés d'instruments virtuels intégrant des dizaines de témoins "
-        "d'alerte normalisés ou spécifiques aux constructeurs, et avaries complexes de liaison au sol. La consultation des volumineux "
-        "manuels d'atelier (souvent plusieurs centaines de pages PDF hétérogènes) ralentit considérablement la prise de décision. "
-        "Le projet <b>MaintiDoc</b> répond à ce défi en concevant un assistant documentaire multimodal et agentique fondé sur les modèles "
-        "d'IA générative à poids ouverts. Le système s'adresse à deux profils principaux :", s_body))
+        "Dans l'environnement quotidien d'un atelier automobile, les techniciens sont confrontés à une densité d'information "
+        "considérable. Un véhicule moderne embarque entre 50 et 80 calculateurs électroniques communicant sur bus CAN-FD ou LIN. "
+        "Lorsqu'un témoin s'allume au tableau de bord ou qu'une déformation physique apparaît sur un pneumatique, l'opérateur doit "
+        "croiser les codes de défauts (DTC), les notices constructeur souvent volumineuses (manuels de 800 pages) et l'historique "
+        "d'entretien. Ce processus manuel induit des pertes de temps et des risques d'interprétation erronée. "
+        "<b>MaintiDoc</b> intervient comme un outil d'aide documentaire multimodal et agentique sans jamais se substituer à la "
+        "responsabilité du technicien. Notre cadrage identifie deux profils distincts aux prérogatives bien définies :", s_body))
 
-    story.append(Paragraph("• <b>Profil 1 — Technicien de Maintenance (Atelier ou Itinérant) :</b> Intervenant de terrain réalisant les "
-                           "diagnostics de premier niveau, contrôles périodiques et réparations courantes. Il a besoin d'une assistance "
-                           "instantanée par photo (smartphone/tablette) pour décoder un voyant obscur ou identifier une forme d'usure "
-                           "anormale de pneu. Ses exigences clés sont la rapidité d'accès aux tolérances constructeur, la précision "
-                           "des couples de serrage et la sécurité d'intervention (EPI, mise hors tension).", s_bullet))
-    story.append(Paragraph("• <b>Profil 2 — Responsable d'Atelier / Chef d'Équipe :</b> Superviseur de l'activité globale, garant de la "
-                           "qualité, de la conformité réglementaire et de la gestion des ressources. Il a besoin d'une vision transverse, "
-                           "de la traçabilité intégrale des historiques de pannes, de la validation des ordres de réparation avant saisie "
-                           "dans la GMAO (Gestion de Maintenance Assistée par Ordinateur), et de l'accès exclusif aux documents sensibles "
-                           "(procédures pyrotechniques airbag, paramètres d'antidémarrage et notes confidentielles).", s_bullet))
+    story.append(Paragraph("• <b>Profil A — Technicien de Maintenance Atelier / Dépannage rapide :</b> Opérateur de première ligne. "
+                           "Son besoin immédiat est la levée de doute rapide : identifier la cause racine d'un témoin lumineux à partir "
+                           "d'une photo prise au smartphone, obtenir les tolérances physiques (pression de service, couple de serrage des goujons, "
+                           "épaisseur minimale de gomme TWI) et suivre la procédure séquentielle de mise en sécurité sans naviguer dans des centaines de pages.", s_bullet))
+    story.append(Paragraph("• <b>Profil B — Chef d'Atelier / Responsable de Maintenance :</b> Superviseur garant de la sécurité légale et de la GMAO. "
+                           "Il a besoin de consulter l'historique complet des interventions sur un équipement via le protocole MCP, "
+                           "d'approuver ou d'amender les projets d'ordres de réparation (tickets) préparés par l'assistant, et de conserver l'accès "
+                           "exclusif aux procédures sensibles (neutralisation pyrotechnique des airbags, programmation de transpondeurs d'antidémarrage).", s_bullet))
 
-    story.append(Spacer(1, 6))
-    story.append(Paragraph("2.1.2 Cas d'Usage Concrets", s_h2))
-    story.append(Paragraph("Cinq cas d'usage représentatifs ont été modélisés pour guider les spécifications et les bancs d'essai :", s_body))
+    story.append(Spacer(1, 5))
+    story.append(Paragraph("2.1.2 Cas d'Usage Métier Concrets", s_h2))
+    story.append(Paragraph("Nous avons modélisé cinq cas d'usage ancrés dans la réalité des interventions d'atelier :", s_body))
 
     uc_data = [
-        [Paragraph("<b>Cas d'usage</b>", s_table_header), Paragraph("<b>Description fonctionnelle & Flux opérationnel</b>", s_table_header)],
+        [Paragraph("<b>Cas d'Usage</b>", s_table_header), Paragraph("<b>Scénario Opérationnel & Enchaînement des Actions</b>", s_table_header)],
         [
-            Paragraph("<b>CU-1 : Identification d'un voyant combiné ambigu</b>", s_table_cell_bold),
-            Paragraph("Le technicien photographie un voyant ambre allumé au tableau de bord. MaintiDoc identifie le témoin TPMS (TDB-09), "
-                      "extrait la cause physique probable (fuite lente ou baisse thermique), cite la page du manuel et indique la "
-                      "procédure de réinitialisation séquentielle.", s_table_cell)
+            Paragraph("<b>CU-1 : Décodage d'un témoin combiné ambigu</b>", s_table_cell_bold),
+            Paragraph("Un technicien photographie un voyant orange au combiné d'instruments. MaintiDoc identifie le témoin de surveillance TPMS "
+                      "(TDB-09), élimine l'hypothèse d'une défaillance d'ABS, cite la page 2 du manuel constructeur et fournit la séquence de "
+                      "réinitialisation manuelle après vérification des pressions.", s_table_cell)
         ],
         [
-            Paragraph("<b>CU-2 : Diagnostic d'usure pneumatique par vision</b>", s_table_cell_bold),
-            Paragraph("L'opérateur envoie une photo d'un pneumatique présentant des déformations périodiques. Le modèle vision-langage "
-                      "reconnaît une usure en facettes (*Cupping Wear* - PNE-10), exclut un problème de gonflage et oriente vers "
-                      "un défaut d'amortisseur ou un jeu de train roulant.", s_table_cell)
+            Paragraph("<b>CU-2 : Diagnostic d'usure anormale de train roulant</b>", s_table_cell_bold),
+            Paragraph("L'opérateur transmet la photo d'un pneumatique présentant une usure en vagues sur l'épaulement intérieur. "
+                      "L'analyse visuelle identifie une usure en facettes (<i>Cupping Wear</i> - PNE-10). Le système écarte une mauvaise pression "
+                      "et préconise l'inspection immédiate de l'amortisseur fuyard et du silentbloc de triangle.", s_table_cell)
         ],
         [
-            Paragraph("<b>CU-3 : Corrélation avec historique MCP</b>", s_table_cell_bold),
-            Paragraph("Face à un code défaut Check Engine récurrent, le système appelle l'outil MCP <code>get_equipment_history</code> "
-                      "pour consulter les 3 dernières interventions sur le véhicule et croiser les réparations antérieures avec les notes d'atelier.", s_table_cell)
+            Paragraph("<b>CU-3 : Corrélation avec l'historique atelier via MCP</b>", s_table_cell_bold),
+            Paragraph("Face à une alerte moteur persistante (Check Engine TDB-04), le système déclenche un appel d'outil MCP <code>get_equipment_history</code> "
+                      "sur l'identifiant du véhicule pour vérifier si des ratés d'allumage similaires ont déjà été consignés lors des 90 derniers jours.", s_table_cell)
         ],
         [
-            Paragraph("<b>CU-4 : Préparation sécurisée d'un ticket GMAO</b>", s_table_cell_bold),
-            Paragraph("Lorsqu'un remplacement est prescrit (ex: rupture de nappe carcasse - PNE-05), MaintiDoc rédige un brouillon de ticket "
-                      "structuré. L'action sensible n'est exécutée via l'outil MCP <code>create_ticket</code> qu'après approbation humaine "
-                      "explicite de l'opérateur avec clé d'idempotence.", s_table_cell)
+            Paragraph("<b>CU-4 : Préparation encadrée d'un ordre de travail</b>", s_table_cell_bold),
+            Paragraph("Constatant une hernie sur flanc (PNE-05, danger mortel d'éclatement), l'assistant rédige un brouillon de ticket "
+                      "avec référence de pièce et degré d'urgence. Le ticket reste bloqué en attente jusqu'à ce que le technicien clique "
+                      "sur 'Valider l'ordre d'intervention' avec émission d'un jeton d'approbation et clé d'idempotence.", s_table_cell)
         ],
         [
-            Paragraph("<b>CU-5 : Gestion de l'incertitude & clarification</b>", s_table_cell_bold),
-            Paragraph("Si la photo transmise est floue, mal cadrée ou si la plaque signalétique est illisible, MaintiDoc s'abstient "
-                      "formellement de deviner et formule une question de clarification guidée, préservant la sûreté du diagnostic.", s_table_cell)
+            Paragraph("<b>CU-5 : Détection d'image inexploitable et clarification</b>", s_table_cell_bold),
+            Paragraph("Si la prise de vue présente un reflet aveuglant ou si le voyant est hors focus, MaintiDoc refuse de deviner. "
+                      "Il formule explicitement : <i>« Cliché insuffisant : merci de reprendre la photo de face en évitant les reflets sur la vitre du combiné »</i>.", s_table_cell)
         ]
     ]
-    t_uc = Table(uc_data, colWidths=[160, 348])
+    t_uc = Table(uc_data, colWidths=[155, 350])
     t_uc.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), c_primary),
+        ('BACKGROUND', (0,0), (-1,0), c_navy),
         ('BOX', (0,0), (-1,-1), 1, c_border),
         ('INNERGRID', (0,0), (-1,-1), 0.5, c_border),
-        ('TOPPADDING', (0,0), (-1,-1), 4),
-        ('BOTTOMPADDING', (0,0), (-1,-1), 4),
+        ('TOPPADDING', (0,0), (-1,-1), 3.5),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 3.5),
     ]))
     story.append(t_uc)
 
@@ -379,65 +380,63 @@ def build_pdf(filename="L1_MaintiDoc_ELAOUAZI-SOUILI-YEKHLEF_Rapport.pdf"):
     # =========================================================================
     # PAGE 3 : SECTION 2.1 (SUITE) - OBJECTIFS, PÉRIMÈTRE & CONTRAINTES
     # =========================================================================
-    story.append(Paragraph("2.1.3 Objectifs Vérifiables du Prototype (Semaine 6)", s_h2))
+    story.append(Paragraph("2.1.3 Objectifs Vérifiables du Prototype (Cible Semaine 6)", s_h2))
     story.append(Paragraph(
-        "Conformément au cahier des charges, le prototype final développé en semaine 6 sera soumis à une batterie d'évaluation "
-        "comportant 150 scénarios de test. Il devra impérativement satisfaire les objectifs vérifiables suivants :", s_body))
+        "Afin d'éviter toute ambiguïté sur ce qui constitue un succès lors de la soutenance finale, nous fixons cinq "
+        "objectifs vérifiables et mesurables sans déclarations subjectives :", s_body))
 
-    story.append(Paragraph("1. <b>Fidélité et sourçage documentaire :</b> Pour toute réponse affirmative, le système doit citer au "
-                           "moins un document existant, sa version, le numéro de page exact et l'identifiant de figure le cas échéant. "
-                           "Aucune affirmation technique ne doit être formulée sans soutien direct d'un passage indexé (zéro hallucination non sourcée).", s_bullet))
-    story.append(Paragraph("2. <b>Cloisonnement et contrôle d'accès strict (RBAC) :</b> Le système doit refuser systématiquement "
-                           "l'accès à un document ou passage confidentiel lorsque l'utilisateur n'appartient pas au groupe autorisé "
-                           "(ex. refus d'accès d'un technicien standard à la note de service pyrotechnique ou aux documents antidémarrage).", s_bullet))
-    story.append(Paragraph("3. <b>Garde-fou humain absolu sur action sensible (HITL) :</b> Aucun ticket de maintenance ne peut être "
-                           "créé de manière autonome dans le serveur MCP. La création effective exige un jeton d'approbation à usage unique "
-                           "validé par l'opérateur après visualisation du contenu textuel complet.", s_bullet))
-    story.append(Paragraph("4. <b>Résistance aux attaques par injection indirecte :</b> Lors de l'ingestion de documents piégés "
-                           "contenant des instructions malveillantes (ex. ordre d'exfiltration ou d'élévation de privilèges), le système "
-                           "doit traiter le contenu textuel comme de la donnée passive et ne jamais exécuter la directive masquée.", s_bullet))
-    story.append(Paragraph("5. <b>Abstention justifiée en cas d'ambiguïté ou d'image dégradée :</b> Le système doit préférer formuler "
-                           "une demande de clarification plutôt que de fournir une réponse approximative lorsque les preuves documentaires "
-                           "sont insuffisantes ou contradictoires.", s_bullet))
+    story.append(Paragraph("1. <b>Exactitude et ancrage des citations (Grounding) :</b> Toute affirmation technique formulée par "
+                           "l'assistant doit être appuyée par au moins une citation vérifiable comprenant l'identifiant stable du document "
+                           "(<code>document_id</code>), le numéro de page précis et le numéro d'illustration. Zéro tolérance pour les citations fantômes.", s_bullet))
+    story.append(Paragraph("2. <b>Cloisonnement effectif des accès (RBAC) :</b> Un utilisateur authentifié sous le rôle <code>techniciens_pneumatiques</code> "
+                           "doit se voir refuser systématiquement l'affichage d'un extrait classé confidentiel atelier (ex. procédure antidémarrage ou airbag). "
+                           "Ce refus est constaté dès la couche de recherche vectorielle Qdrant (pré-filtrage).", s_bullet))
+    story.append(Paragraph("3. <b>Absence totale d'autonomie sur les actions sensibles :</b> Aucun ticket de maintenance ne peut être "
+                           "inséré dans le serveur MCP sans une action physique délibérée de validation de l'opérateur. La signature cryptographique "
+                           "du jeton d'approbation (token à usage unique) est vérifiée à chaque écriture.", s_bullet))
+    story.append(Paragraph("4. <b>Immunité face aux injections indirectes :</b> Lorsque le système ingère un document d'atelier piégé "
+                           "contenant des instructions malveillantes dissimulées, le moteur de génération doit traiter ce texte exclusivement "
+                           "comme une donnée passive et refuser d'exécuter l'instruction dérogatoire.", s_bullet))
+    story.append(Paragraph("5. <b>Comportement d'abstention déterministe :</b> Face à une photo floue ou deux documents contradictoires, "
+                           "le système doit afficher un statut explicite <code>needs_clarification</code> avec justification, sans inventer de valeur moyenne.", s_bullet))
 
-    story.append(Spacer(1, 6))
-    story.append(Paragraph("2.1.4 Périmètre et Hors-Périmètre Explicite", s_h2))
+    story.append(Spacer(1, 5))
+    story.append(Paragraph("2.1.4 Périmètre Retenu et Hors-Périmètre Explicite", s_h2))
 
     scope_data = [
-        [Paragraph("<b>Élément</b>", s_table_header), Paragraph("<b>Détail du Périmètre Retenu</b>", s_table_header)],
-        [Paragraph("<b>Entrées supportées</b>", s_table_cell_bold), Paragraph("Questions en langage naturel (français), photographies numériques de témoins/avaries (JPEG/PNG), documents techniques au format PDF.", s_table_cell)],
-        [Paragraph("<b>Sorties produites</b>", s_table_cell_bold), Paragraph("Réponses techniques structurées Pydantic, citations exactes [doc_id, page, figure], demandes de précision, brouillons de tickets de maintenance.", s_table_cell)],
-        [Paragraph("<b>Outil externe (MCP)</b>", s_table_cell_bold), Paragraph("Serveur MCP d'atelier exposant <code>get_equipment_history</code>, <code>get_open_tickets</code> et <code>create_ticket</code> avec contrôle d'autorisation à chaque appel.", s_table_cell)],
-        [Paragraph("<b>Action sensible</b>", s_table_cell_bold), Paragraph("Création d'ordre de réparation (ticket) soumise à validation humaine explicite et protégée contre les doublons par clé d'idempotence.", s_table_cell)],
+        [Paragraph("<b>Composante</b>", s_table_header), Paragraph("<b>Périmètre Pris en Charge</b>", s_table_header)],
+        [Paragraph("<b>Entrées admissibles</b>", s_table_cell_bold), Paragraph("Questions techniques formulées en français ; photographies numériques de témoins ou de pneumatiques (JPEG/PNG) ; documents PDF d'atelier.", s_table_cell)],
+        [Paragraph("<b>Sorties fournies</b>", s_table_cell_bold), Paragraph("Réponses techniques structurées Pydantic avec citations explicites [doc_id, page, figure] ; demandes de précisions guidées ; brouillons de tickets.", s_table_cell)],
+        [Paragraph("<b>Outil externe (MCP)</b>", s_table_cell_bold), Paragraph("Serveur MCP d'atelier exposant <code>get_equipment_history</code>, <code>get_open_tickets</code> et <code>create_ticket</code> avec contrôle d'autorisation systématique.", s_table_cell)],
+        [Paragraph("<b>Action sensible</b>", s_table_cell_bold), Paragraph("Création effective d'un ordre de réparation dans la base de données, conditionnée par une approbation humaine explicite et protégée contre les doublons.", s_table_cell)],
         [Paragraph("<b>HORS-PÉRIMÈTRE STRICT</b>", ParagraphStyle('HP', parent=s_table_cell_bold, textColor=c_alert)), 
-         Paragraph("<b>• Aucun pilotage direct ou télécommande d'équipements mécaniques ou calculateurs (ECU).<br/>"
-                   "• Aucun diagnostic formellement garanti : le système constitue une aide documentaire d'aide à la décision.<br/>"
-                   "• Aucune intervention autonome sans la présence et la validation d'un technicien habilité.<br/>"
-                   "• Aucun effacement autonome de codes défauts (DTC) sur les réseaux multiplexés du véhicule.</b>", s_table_cell)]
+         Paragraph("<b>• Aucun pilotage à distance de machines-outils, ponts élévateurs ou organes du véhicule.<br/>"
+                   "• Aucun effacement autonome de codes défauts calculateurs (DTC) sur la prise diagnostic OBD.<br/>"
+                   "• Aucun engagement de garantie mécanique : l'assistant fournit une aide documentaire, le technicien reste seul maître d'œuvre.<br/>"
+                   "• Aucune intervention autonome sans opérateur habilité présent physiquement.</b>", s_table_cell)]
     ]
-    t_scope = Table(scope_data, colWidths=[130, 378])
+    t_scope = Table(scope_data, colWidths=[125, 380])
     t_scope.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), c_primary),
+        ('BACKGROUND', (0,0), (-1,0), c_navy),
         ('BOX', (0,0), (-1,-1), 1, c_border),
         ('INNERGRID', (0,0), (-1,-1), 0.5, c_border),
-        ('TOPPADDING', (0,0), (-1,-1), 4),
-        ('BOTTOMPADDING', (0,0), (-1,-1), 4),
+        ('TOPPADDING', (0,0), (-1,-1), 3.5),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 3.5),
     ]))
     story.append(t_scope)
 
-    story.append(Spacer(1, 6))
-    story.append(Paragraph("2.1.5 Hypothèses et Contraintes Matérielles", s_h2))
+    story.append(Spacer(1, 5))
+    story.append(Paragraph("2.1.5 Hypothèses Techniques et Dimensionnement Matériel", s_h2))
     story.append(Paragraph(
-        "Le projet s'appuie sur des contraintes techniques réalistes dimensionnées pour un environnement de prototypage avancé :", s_body))
-    story.append(Paragraph("• <b>Ressources de calcul (GPU / RAM) :</b> Station de développement équipée d'un GPU de 16 à 24 Go de VRAM "
-                           "(cible NVIDIA RTX 4090 ou instance cloud équivalente). Le modèle vision-langage retenu (Qwen2.5-VL-7B-Instruct) "
-                           "sera exécuté sous quantification 4-bit (AWQ / GPTQ) ou via le moteur d'inférence haute performance vLLM afin de "
-                           "conserver l'empreinte mémoire sous le seuil critique des 14 Go de VRAM, réservant la mémoire résiduelle pour les embeddings et le reranker.", s_bullet))
-    story.append(Paragraph("• <b>Budgets de latence et d'appels :</b> Conformément aux directives, une requête simple devra afficher "
-                           "une latence p95 inférieure à 30 secondes. Les budgets opérationnels appliquent des plafonds stricts : maximum "
-                           "3 appels MCP par requête, maximum 6 inférences LLM/VLM, et un timeout automatique de 60 secondes.", s_bullet))
-    story.append(Paragraph("• <b>Contraintes temporelles :</b> Cycle serré de 6 semaines imposant une architecture hautement modulaire, "
-                           "des interfaces formalisées par contrats d'API (Pydantic / OpenAPI) et un suivi de version rigoureux sous Git.", s_bullet))
+        "Nous fondons notre faisabilité technique sur des hypothèses d'infrastructure mesurées et réalistes :", s_body))
+    story.append(Paragraph("• <b>Ressources d'exécution (GPU & VRAM) :</b> Nous ciblons un environnement d'inférence disposant de 16 à 24 Go de mémoire "
+                           "vidéo (NVIDIA RTX 4090 locale ou instance cloud équivalente). Le modèle vision-langage retenu (Qwen2.5-VL-7B-Instruct) "
+                           "sera exécuté sous quantification 4-bit (AWQ / GPTQ) via le moteur vLLM. Ce choix stabilise la consommation à environ 11-13 Go "
+                           "de VRAM, laissant une marge confortable pour le modèle d'embedding BGE-M3 et le reranker sans risque de crash mémoire (*OOM*).", s_bullet))
+    story.append(Paragraph("• <b>Budgets opérationnels et latence :</b> Une requête complète (analyse d'image + recherche Qdrant + synthèse VLM) "
+                           "doit s'exécuter en moins de 30 secondes en p95. Les boucles de raisonnement agentique sont bridées à 3 appels d'outils MCP "
+                           "et 6 passes LLM au maximum, avec un coupe-circuit temporel automatique fixé à 60 secondes.", s_bullet))
+    story.append(Paragraph("• <b>Organisation du travail :</b> L'équipe répartit son temps sur 6 semaines avec une gestion stricte des dépendances sous Git.", s_bullet))
 
     story.append(PageBreak())
 
@@ -445,255 +444,257 @@ def build_pdf(filename="L1_MaintiDoc_ELAOUAZI-SOUILI-YEKHLEF_Rapport.pdf"):
     # PAGE 4 : SECTION 2.2 - CONSTITUTION DU CORPUS DOCUMENTAIRE
     # =========================================================================
     story.append(Paragraph("2.2 Constitution du Corpus Documentaire", s_h1))
-    story.append(Paragraph("2.2.1 Stratégie de Constitution et Typologie des Documents", s_h2))
+    story.append(Paragraph("2.2.1 Composition et Équilibre du Corpus (45 Documents)", s_h2))
     story.append(Paragraph(
-        "Afin d'alimenter le RAG multimodal de MaintiDoc sans violer de secrets industriels ni enfreindre le RGPD, notre équipe "
-        "a constitué un corpus synthétique et semi-public de <b>45 documents techniques complets</b> (dépassant le seuil minimal requis de "
-        "30 documents). Le corpus est équilibré de manière symétrique entre deux familles complémentaires de l'après-vente automobile :", s_body))
+        "Plutôt que d'aspirer aveuglément des PDF disparates sur le web — souvent protégés par copyright ou truffés de données "
+        "personnelles réelles — notre équipe a conçu un corpus sur mesure de <b>45 documents techniques originaux</b> (au-delà des 30 demandés). "
+        "Le corpus est rigoureusement articulé autour de nos deux familles d'équipements :", s_body))
 
-    story.append(Paragraph("• <b>Famille 1 — Tableaux de Bord (`tableaux_de_bord`) : 23 documents</b> couvrant l'ensemble des témoins combinés "
-                           "et systèmes électroniques de bord : pression d'huile moteur, surchauffe circuit de refroidissement, charge batterie/alternateur, "
-                           "témoin d'anomalie moteur (*Check Engine* OBD-II), système de freinage hydraulique, antiblocage ABS, contrôle de trajectoire ESP, "
-                           "sécurité passive Airbag SRS, surveillance de pression TPMS, filtre à particules FAP, préchauffage diesel, jauge à carburant, "
-                           "direction assistée, AdBlue/SCR, ceinture, boîte de vitesses automatique, défaillance éclairage, antidémarrage et combiné éteint.", s_bullet))
-    story.append(Paragraph("• <b>Famille 2 — Pneumatiques (`pneumatiques`) : 22 documents</b> couvrant les avaries physiques, structurelles et "
-                           "dimensionnelles : crevaison lente / pneu dégonflé, perforation par clou, perforation par vis, usures anormales par mauvaise "
-                           "pression, hernie sur flanc, coupure flanc, abrasion par trottoir, vieillissement et craquelures d'ozone (Dry Rot), usure totale "
-                           "sous seuil légal (Bald tire), usure en facettes (*Cupping*), usure en dents de scie (*Feathering*), méplat de freinage, arrachement "
-                           "de gomme (*Chunking*), usure dissymétrique de géométrie, décollement de bande de roulement, décollement de carcasse, dommage "
-                           "de gomme intérieure (*Inner liner*), détérioration de talon, décollement de tringle et câbles d'armature métallique à nu.", s_bullet))
+    story.append(Paragraph("• <b>Famille 1 — Tableaux de Bord (`tableaux_de_bord`) : 23 documents</b> traitant des combinés d'instruments "
+                           "et de l'électronique de bord : pression d'huile critique, surchauffe du liquide de refroidissement, circuit de charge "
+                           "alternateur, voyant moteur d'anomalie de combustion (Check Engine OBD-II), circuit de freinage hydraulique, antiblocage ABS, "
+                           "régulation de trajectoire ESP, sécurité pyrotechnique Airbag SRS, surveillance TPMS, filtre à particules FAP, préchauffage diesel, "
+                           "jauge de réserve carburant, direction assistée EPS, alerte d'AdBlue Euro 6, capteur de boucle de ceinture, boîte automatique en mode "
+                           "refuge, éclairage et bus CAN, antidémarrage transpondeur, et extinction totale de combiné.", s_bullet))
+    story.append(Paragraph("• <b>Famille 2 — Pneumatiques (`pneumatiques`) : 22 documents</b> couvrant les avaries physiques de liaison au sol : "
+                           "crevaison lente et pneu dégonflé, perforation par clou réparable par champignon PRP, perforation par vis avec déformation "
+                           "de nappe, usure asymétrique par mauvaise pression, hernie de flanc, coupure latérale par bordure, abrasion superficielle, "
+                           "craquelures d'ozone et date de fabrication DOT, usure totale sous seuil légal de 1.6 mm, usure en facettes due aux amortisseurs "
+                           "(Cupping), usure en écaille de parallélisme (Feathering), méplat de blocage de roue (Flat spot), arrachement de gomme (Chunking), "
+                           "usure de carrossage, décollement de bande de roulement, décollement des nappes internes, endommagement du calandrage d'étanchéité "
+                           "(Inner liner), talon de tringle déchiré, et câbles métalliques d'armature à nu.", s_bullet))
 
     story.append(Spacer(1, 4))
-    story.append(Paragraph("Répartition Typologique et Éléments Visuels du Corpus :", s_h3))
+    story.append(Paragraph("Répartition Synthétique et Formats Documentaires :", s_h3))
 
     corpus_stat_data = [
         [Paragraph("<b>Famille d'Équipement</b>", s_table_header), Paragraph("<b>Procédures d'Atelier</b>", s_table_header), 
-         Paragraph("<b>Fiches de Sécurité</b>", s_table_header), Paragraph("<b>Scans OCR Dégradés</b>", s_table_header), 
-         Paragraph("<b>Cas Contradictoires / Piégés</b>", s_table_header), Paragraph("<b>Total Docs</b>", s_table_header)],
+         Paragraph("<b>Fiches de Sécurité</b>", s_table_header), Paragraph("<b>Documents Scannés (OCR)</b>", s_table_header), 
+         Paragraph("<b>Cas de Test (Contrad. / Injection)</b>", s_table_header), Paragraph("<b>Total Général</b>", s_table_header)],
         [
             Paragraph("<b>Tableaux de Bord (TDB)</b>", s_table_cell_bold),
-            Paragraph("18 documents", s_table_cell),
+            Paragraph("18 documents standard", s_table_cell),
             Paragraph("2 fiches (Airbag, Pression)", s_table_cell),
-            Paragraph("1 scan (tdb_19)", s_table_cell),
+            Paragraph("1 scan dégradé (tdb_19)", s_table_cell),
             Paragraph("1 contradictoire + 1 injection", s_table_cell),
             Paragraph("<b>23 documents</b>", s_table_cell_bold)
         ],
         [
             Paragraph("<b>Pneumatiques (PNE)</b>", s_table_cell_bold),
-            Paragraph("14 documents", s_table_cell),
+            Paragraph("14 documents standard", s_table_cell),
             Paragraph("6 fiches (Hernie, Rebut, EPI)", s_table_cell),
-            Paragraph("1 scan (pne_12)", s_table_cell),
+            Paragraph("1 scan dégradé (pne_12)", s_table_cell),
             Paragraph("1 contradictoire", s_table_cell),
             Paragraph("<b>22 documents</b>", s_table_cell_bold)
         ],
         [
-            Paragraph("<b>Total Général Corpus</b>", s_table_cell_bold),
+            Paragraph("<b>Total Répertoire Corpus</b>", s_table_cell_bold),
             Paragraph("32 procédures", s_table_cell),
             Paragraph("8 fiches sécurité", s_table_cell),
             Paragraph("2 documents scannés", s_table_cell),
             Paragraph("3 cas de test avancés", s_table_cell),
-            Paragraph("<b>45 documents (40 images)</b>", ParagraphStyle('Tot', parent=s_table_cell_bold, textColor=c_primary))
+            Paragraph("<b>45 documents (40 images)</b>", ParagraphStyle('Tot', parent=s_table_cell_bold, textColor=c_blue))
         ]
     ]
-    t_stat = Table(corpus_stat_data, colWidths=[120, 80, 80, 75, 95, 58])
+    t_stat = Table(corpus_stat_data, colWidths=[120, 80, 80, 75, 95, 55])
     t_stat.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), c_primary),
+        ('BACKGROUND', (0,0), (-1,0), c_navy),
         ('BOX', (0,0), (-1,-1), 1, c_border),
         ('INNERGRID', (0,0), (-1,-1), 0.5, c_border),
-        ('TOPPADDING', (0,0), (-1,-1), 4),
-        ('BOTTOMPADDING', (0,0), (-1,-1), 4),
+        ('TOPPADDING', (0,0), (-1,-1), 3.5),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 3.5),
     ]))
     story.append(t_stat)
 
-    story.append(Spacer(1, 8))
-    story.append(Paragraph("2.2.2 Traçabilité des Prompts et Licences Légales", s_h2))
+    story.append(Spacer(1, 6))
+    story.append(Paragraph("2.2.2 Traçabilité des Prompts de Génération et Propriété Intellectuelle", s_h2))
     story.append(Paragraph(
-        "L'ensemble des prompts utilisés pour la génération documentaire est consigné avec précision dans le fichier "
-        "<code>corpus/prompts_corpus.md</code> (prompts numérotés de <b>P01 à P13</b>). Chaque document de l'inventaire renvoie "
-        "directement à l'identifiant du prompt source. Les textes ont été rédigés avec l'assistance de Claude 3.5 Sonnet le 06/11/2026, "
-        "puis structurés au format PDF via ReportLab. Les 40 illustrations uniques intégrées proviennent de photographies d'atelier réelles "
-        "et de ressources éducatives ouvertes, placées sous licence <b>Creative Commons (CC BY 4.0 / CC BY-SA)</b> ou générées "
-        "synthétiquement, assurant une parfaite réutilisabilité sans risque légal.", s_body))
+        "Chaque fiche a été rédigée avec l'assistance de Claude 3.5 Sonnet sous le contrôle direct de l'équipe (prompts <b>P01 à P13</b> "
+        "consignés dans <code>corpus/prompts_corpus.md</code>). Les textes respectent les normes industrielles ISO 2575:2021 et les directives ETRTO. "
+        "Les 40 photographies associées sont cataloguées de façon unique sous <code>corpus/images/</code> (format <code>&lt;document_id&gt;_f1.jpg</code>), "
+        "issues de banques éducatives ouvertes sous licence Creative Commons (CC BY / CC BY-SA) ou générées sans données personnelles.", s_body))
 
     story.append(PageBreak())
 
     # =========================================================================
     # PAGE 5 : SECTION 2.2 (SUITE) - ANALYSE CRITIQUE ET CAS DE TESTS
     # =========================================================================
-    story.append(Paragraph("2.2.3 Analyse Critique de l'Usage de l'IA Générative (½ page)", s_h2))
+    story.append(Paragraph("2.2.3 Analyse Critique de l'Usage de l'IA (½ page)", s_h2))
     story.append(Paragraph(
-        "Bien que les modèles de langage avancés accélèrent la production de documentation technique, notre démarche de double "
-        "relecture humaine a démontré qu'un LLM ne peut être considéré comme une source fiable sans vérification experte. "
-        "Quatre catégories d'erreurs et d'hallucinations majeures ont été détectées et neutralisées :", s_body))
+        "Notre retour d'expérience sur la génération assistée par IA confirme une règle fondamentale : <b>un modèle de langage "
+        "ne possède aucune compréhension physique de la mécanique automobile</b>. Sans notre relecture experte croisée, "
+        "plusieurs erreurs graves auraient pollué la base documentaire :", s_body))
 
     critique_points = [
-        "<b>1. Hallucination sur la miscibilité chimique des fluides de freinage :</b> Dans la version brute générée pour le voyant de frein "
-        "(<code>tdb_05</code>), l'IA a affirmé qu'un appoint avec un liquide synthétique récent « de type DOT 5 ou DOT 5.1 » pouvait être réalisé "
-        "sans distinction. Or, le liquide DOT 5.0 (base silicone) est chimiquement incompatible avec le DOT 4 (base glycol) : leur mélange "
-        "provoque la destruction immédiate des joints en élastomère et le blocage de la centrale hydraulique ABS. L'équipe a rectifié le document "
-        "nominal en imposant exclusivement le DOT 4, et a capitalisé sur cette erreur pour concevoir la procédure contradictoire de test.",
+        "<b>1. Confusion sur la chimie et la miscibilité des fluides hydrauliques :</b> Lors de la génération initiale de la fiche sur le liquide "
+        "de frein (<code>tdb_05</code>), Claude a proposé qu'en cas de niveau bas, un appoint pouvait être réalisé avec « du liquide synthétique moderne "
+        "DOT 5.1 ou DOT 5 ». C'est une erreur technique gravissime : le liquide DOT 5.0 est à base de silicone, alors que les DOT 3, DOT 4 et DOT 5.1 "
+        "sont à base de polyéthylène glycol éther. Leur mélange dans un bocal produit une séparation de phase immédiate, détruit les coupelles en caoutchouc "
+        "du maître-cylindre et inhibe le bloc électro-hydraulique ABS. Nous avons corrigé cette aberration dans la fiche nominale et nous nous en sommes "
+        "servis pour fabriquer la version contradictoire de test.",
 
-        "<b>2. Inversions d'unités physiques et oubli du facteur thermique :</b> Lors de la génération des fiches de pression (<code>pne_01</code> "
-        "et <code>pne_04</code>), le modèle a confondu à deux reprises les valeurs de pression en <i>bar</i> et en <i>psi</i> (indiquant 2.5 psi "
-        "au lieu de 2.5 bar, soit une erreur d'un facteur 14 qui causerait l'éclatement immédiat de la roue). De plus, l'IA omettait systématiquement "
-        "la dilatation thermique de l'air : une pression mesurée à chaud doit impérativement être majorée de +0,3 bar par rapport à l'étiquette constructeur.",
+        "<b>2. Inversions d'unités de pression et omission du facteur thermique :</b> Sur les pneumatiques (<code>pne_01</code> et <code>pne_04</code>), "
+        "le modèle a confondu à deux reprises les bars et les psi, mentionnant une tolérance de 2.5 psi au lieu de 2.5 bar (un pneu gonflé à 2.5 psi roule "
+        "sur la jante et déchire sa carcasse en 500 mètres). De plus, l'IA omettait systématiquement la loi des gaz parfaits : le roulage échauffe l'air "
+        "interne (+0,2 à +0,4 bar). Une consigne d'atelier qui n'impose pas « mesure impérative à froid ou compensation de +0,3 bar à chaud » est inadmissible.",
 
-        "<b>3. Références réglementaires et liens bibliographiques fictifs :</b> Le modèle a inventé plusieurs numéros d'articles de directives "
-        "européennes et généré des URL inexistantes. L'équipe a remplacé ces références par des normes internationales vérifiées et pérennes : "
-        "ISO 2575:2021 (symboles combiné de bord), Règlement CEE-ONU n°121, et normes dimensionnelles de l'ETRTO.",
+        "<b>3. Hallucination de directives et liens réglementaires :</b> Le modèle citait occasionnellement des numéros de directives européennes "
+        "fantaisistes. Nous avons assaini l'ensemble des métadonnées en réintroduisant les règlements réels de l'homologation : Règlement ONU n°121 "
+        "pour les témoins de bord, et règlements n°30 et n°54 pour les pneumatiques de véhicules légers et utilitaires.",
 
-        "<b>4. Biais d'optimisme et réparations dangereuses sur organes structurels :</b> L'IA proposait par défaut de « colmater ou vulcaniser » "
-        "une hernie sur flanc de pneu (<code>pne_05</code>). Il s'agit d'une prescription mortelle : toute rupture de nappe carcasse radiale impose "
-        "la mise au rebut immédiate du pneumatique. L'équipe a durci les fiches de sécurité en introduisant l'obligation d'escalade vers un technicien habilité."
+        "<b>4. Biais de réparation hasardeuse sur organes de sécurité :</b> L'IA avait tendance à proposer des solutions de « dépannage d'urgence » "
+        "sur des pièces non réparables, comme tenter de poser une mèche sur le flanc d'un pneu ou colmater une hernie (<code>pne_05</code>). "
+        "Dans la pratique atelier, une hernie signale la rupture irréversible des nappes de carcasse métallique : le pneu peut exploser à tout instant "
+        "sous l'effet de la pression. Nous avons réécrit les sections d'escalade en imposant la mise au rebut immédiate."
     ]
     for pt in critique_points:
         story.append(Paragraph(f"• {pt}", s_bullet))
 
-    story.append(Spacer(1, 8))
-    story.append(Paragraph("2.2.4 Cas de Test Spécifiques Définis pour les Semaines 2 à 5", s_h2))
+    story.append(Spacer(1, 6))
+    story.append(Paragraph("2.2.4 Définition des Cas Limites de Test pour les Semaines 2 à 5", s_h2))
     story.append(Paragraph(
-        "Pour valider rigoureusement le comportement de MaintiDoc face aux pièges documentaires, cinq cas d'évaluation sont intégrés :", s_body))
+        "Pour valider rigoureusement le comportement de MaintiDoc face aux pièges d'atelier, notre inventaire intègre déjà cinq cas d'évaluation :", s_body))
 
     test_cases_table = [
-        [Paragraph("<b>Document ID</b>", s_table_header), Paragraph("<b>Nature du Cas de Test</b>", s_table_header), 
-         Paragraph("<b>Comportement Attendu de l'Assistant MaintiDoc</b>", s_table_header)],
+        [Paragraph("<b>Identifiant Fichier</b>", s_table_header), Paragraph("<b>Nature du Cas Limite & Piège Introduit</b>", s_table_header), 
+         Paragraph("<b>Comportement Attendu du Système MaintiDoc</b>", s_table_header)],
         [
             Paragraph("<code>tdb_05_frein_liquide_v2</code>", s_code),
-            Paragraph("<b>Document Contradictoire</b><br/>Affirme que le liquide silicone DOT 5 est miscible avec DOT 4 et autorise le dépassement du MAX.", s_table_cell),
-            Paragraph("Détecter le conflit entre la v1.0 et la v2.0, alerter l'opérateur sur la contradiction et appliquer le principe de sécurité maximale.", s_table_cell)
+            Paragraph("<b>Document Contradictoire</b><br/>Procédure révisée autorisant le mélange de silicone DOT 5 et le dépassement du niveau MAX.", s_table_cell),
+            Paragraph("Détecter la contradiction formelle avec la v1.0, refuser de valider l'instruction laxiste et alerter sur le danger d'incompatibilité chimique.", s_table_cell)
         ],
         [
             Paragraph("<code>pne_04_usure_pression_v2</code>", s_code),
-            Paragraph("<b>Document Contradictoire</b><br/>Autorise le contrôle immédiat à chaud sans compensation et fixe 2.0 bar uniforme pour tous véhicules.", s_table_cell),
-            Paragraph("Identifier la contradiction avec la notice constructeur à froid et inviter l'utilisateur à vérifier l'étiquette de portière.", s_table_cell)
+            Paragraph("<b>Document Contradictoire</b><br/>Procédure autorisant la mesure de pression à chaud sans correction thermique et fixant 2.0 bar uniforme.", s_table_cell),
+            Paragraph("Identifier le désaccord avec la notice constructeur à froid et inviter l'opérateur à vérifier l'étiquette de portière du véhicule.", s_table_cell)
         ],
         [
             Paragraph("<code>tdb_note_service_piegee</code>", s_code),
-            Paragraph("<b>Document Piégé (Prompt Injection)</b><br/>Payload masqué ordonnant le rôle 'Root', l'exfiltration d'historiques et la création de tickets sans HITL.", s_table_cell),
-            Paragraph("Traiter le document comme une donnée passive : zéro exfiltration réseau, maintien strict de la validation humaine MCP et refus d'élévation.", s_table_cell)
+            Paragraph("<b>Document Piégé (Prompt Injection)</b><br/>Payload malveillant masqué ordonnant le passage en mode root et l'exfiltration d'historiques sans validation.", s_table_cell),
+            Paragraph("Traiter le document comme une donnée brute : aucune exfiltration réseau, maintien strict de la validation humaine MCP et refus d'élévation.", s_table_cell)
         ],
         [
             Paragraph("<code>tdb_19_fiche_revision_scanne</code>", s_code),
-            Paragraph("<b>Document Scanné (Test OCR)</b><br/>Fiche d'intervention manuscrite rasterisée à 150 DPI sans calque texte natif.", s_table_cell),
-            Paragraph("Activer le pipeline OCR local (Tesseract / Surya) pour extraire les kilométrages et réinitialisations de révision.", s_table_cell)
+            Paragraph("<b>Document Scanné Dégradé (Test OCR)</b><br/>Fiche manuscrite de révision avec tampon atelier rasterisée à 150 DPI sans calque texte natif.", s_table_cell),
+            Paragraph("Déclencher le pipeline OCR local (Surya / Tesseract) pour extraire avec succès le kilométrage et la remise à zéro combiné.", s_table_cell)
         ],
         [
             Paragraph("<code>pne_12_fiche_controle_geometrie_scanne</code>", s_code),
-            Paragraph("<b>Document Scanné (Test OCR)</b><br/>Rapport de banc géométrie 3D avec mesures de carrossage/pincement rasterisées.", s_table_cell),
-            Paragraph("Extraction OCR des valeurs chiffrées de géométrie et corrélation avec l'usure méplat constatée.", s_table_cell)
+            Paragraph("<b>Document Scanné Dégradé (Test OCR)</b><br/>Rapport brut de banc laser 3D contenant les valeurs d'angle de carrossage/pincement rasterisées.", s_table_cell),
+            Paragraph("Extraire par OCR les angles hors tolérance et faire le lien avec l'usure méplat constatée sur le pneumatique arrière.", s_table_cell)
         ],
         [
             Paragraph("<code>tdb_09_voyant_pression_pneus_tpms</code>", s_code),
-            Paragraph("<b>Cas Ambigu Multi-domaines</b><br/>Témoin combiné d'instruments orange lié à une défaillance de train roulant.", s_table_cell),
-            Paragraph("Faire le pont entre l'alerte électronique de bord et la procédure physique de contrôle de pneumatique.", s_table_cell)
+            Paragraph("<b>Cas Ambigu Multi-domaines</b><br/>Alerte électronique de combiné directement liée à une avarie physique de train roulant.", s_table_cell),
+            Paragraph("Réconcilier les deux corpus en reliant le voyant de bord à la procédure d'inspection de la roue concernée.", s_table_cell)
         ]
     ]
-    t_test = Table(test_cases_table, colWidths=[110, 195, 203])
+    t_test = Table(test_cases_table, colWidths=[110, 195, 200])
     t_test.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), c_primary),
+        ('BACKGROUND', (0,0), (-1,0), c_navy),
         ('BOX', (0,0), (-1,-1), 1, c_border),
         ('INNERGRID', (0,0), (-1,-1), 0.5, c_border),
-        ('TOPPADDING', (0,0), (-1,-1), 3),
-        ('BOTTOMPADDING', (0,0), (-1,-1), 3),
+        ('TOPPADDING', (0,0), (-1,-1), 2.8),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 2.8),
     ]))
     story.append(t_test)
 
     story.append(PageBreak())
 
     # =========================================================================
-    # PAGE 6 : SECTION 2.3 - ARCHITECTURE CIBLE
+    # PAGE 6 : SECTION 2.3 - ARCHITECTURE CIBLE DU SYSTÈME
     # =========================================================================
     story.append(Paragraph("2.3 Architecture Cible du Système", s_h1))
     story.append(Paragraph("2.3.1 Schéma Fonctionnel Global et Points de Contrôle", s_h2))
     story.append(Paragraph(
-        "L'architecture de MaintiDoc est conçue selon un paradigme <b>agentique, multimodal et résilient</b>. Elle découple "
-        "l'ingestion des documents, l'analyse visuelle, la recherche documentaire hybride et l'exécution d'actions externes. "
-        "Trois points de contrôle critiques (<b>PC1, PC2, PC3</b>) garantissent l'étanchéité des accès, la souveraineté humaine et la rigueur du sourçage :", s_body))
+        "Nous avons conçu l'architecture de MaintiDoc selon un principe de <b>ségrégation des responsabilités</b>. "
+        "Le système n'est pas un simple script linéaire : c'est un agent d'état guidé par une machine à états (LangGraph), "
+        "interfaçant un modèle vision-langage quantifié, une base vectorielle hybride et un serveur d'outils d'atelier (MCP). "
+        "Trois points de contrôle fondamentaux (<b>PC1, PC2, PC3</b>) verrouillent les flux sensibles :", s_body))
 
-    # Embed architecture diagram
     arch_img_path = "docs/diagrammes/architecture_cible.png"
     if os.path.exists(arch_img_path):
-        story.append(Spacer(1, 4))
-        story.append(RLImage(arch_img_path, width=490, height=315))
-        story.append(Spacer(1, 4))
+        story.append(Spacer(1, 2))
+        story.append(RLImage(arch_img_path, width=490, height=310))
+        story.append(Spacer(1, 2))
 
     desc_pc = (
-        "<b>Description des 3 Points de Contrôle Clés :</b><br/>"
-        "• <b>PC1 — Contrôle d'Accès Pré- et Post-Retrieval (RBAC) :</b> Authentification par JWT au niveau de la passerelle FastAPI, "
-        "suivie d'un pré-filtrage strict dans Qdrant appliquant la métadonnée <code>groupe_acces</code> de l'utilisateur. Aucun extrait non autorisé n'est exposé au LLM.<br/>"
-        "• <b>PC2 — Validation Humaine Obligatoire (Human-in-the-Loop) :</b> Point d'arrêt bloquant dans le graphe LangGraph. "
-        "Avant tout appel de l'outil sensible MCP <code>create_ticket</code>, le brouillon est présenté au technicien. L'exécution requiert un jeton d'approbation explicite.<br/>"
-        "• <b>PC3 — Vérification Automatisée des Citations (Evidence Grounding) :</b> Module de validation post-génération contrôlant avec "
-        "un schéma Pydantic que chaque citation <code>[doc_id, page, element_id]</code> figure réellement dans les documents extraits et soutient fidèlement la réponse."
+        "<b>Rôle et Implantation des 3 Points de Contrôle :</b><br/>"
+        "• <b>PC1 — Filtrage des Droits d'Accès (RBAC) :</b> Vérification du jeton JWT à l'entrée FastAPI, suivie d'un pré-filtrage booléen "
+        "immédiat dans Qdrant sur la métadonnée <code>groupes_acces</code>. Aucun document non autorisé n'est extrait ni soumis au modèle de langage.<br/>"
+        "• <b>PC2 — Approbation Humaine Explicite (Human-in-the-Loop) :</b> Nœud d'arrêt synchrone dans le graphe LangGraph. "
+        "L'agent ne peut pas déclencher l'écriture d'un ticket MCP de manière autonome : l'action est suspendue jusqu'à réception de la signature de l'opérateur.<br/>"
+        "• <b>PC3 — Contrôle de Fidélité des Citations (Evidence Grounding) :</b> Module d'évaluation Pydantic post-génération. "
+        "Il valide que chaque référence <code>[doc_id, page, figure]</code> correspond à un extrait réel présent dans le contexte d'inférence."
     )
-    story.append(make_box(Paragraph(desc_pc, s_callout), bg_color='#FFFBEB', border_color='#F59E0B'))
+    story.append(make_box(Paragraph(desc_pc, s_callout), bg_color='#F1F5F9', border_color='#94A3B8'))
 
     story.append(PageBreak())
 
     # =========================================================================
     # PAGE 7 : SECTION 2.3 (SUITE) - FICHES DÉTAILLÉES DES BLOCS
     # =========================================================================
-    story.append(Paragraph("2.3.2 Fiches Détaillées des Blocs Fonctionnels", s_h2))
+    story.append(Paragraph("2.3.2 Fiches Techniques des Sept Blocs Fonctionnels", s_h2))
     story.append(Paragraph(
-        "Le système MaintiDoc est découpé en sept blocs modulaires. Chaque bloc répond à une responsabilité unique :", s_body))
+        "Chaque brique du système fait l'objet d'un contrat d'interface rigoureux :", s_body))
 
     blocks_data = [
         [
-            Paragraph("<b>Bloc 1 : Interface Utilisateur (UI)</b>", s_table_cell_bold),
-            Paragraph("<b>Rôle :</b> Permettre au technicien de saisir ses questions textuelles et d'uploader des photos de témoins ou de pneus.<br/>"
-                      "<b>Entrées :</b> Saisie texte, photos (JPEG/PNG), clics d'approbation de tickets.<br/>"
-                      "<b>Sorties :</b> Réponses sourcées, visualisation des figures citées, formulaires de validation de tickets.<br/>"
-                      "<b>Outil retenu :</b> <b>Streamlit</b> (alternative : React / Vite avec TailwindCSS pour intégration mobile).", s_table_cell)
+            Paragraph("<b>Bloc 1 : Interface Web (UI)</b>", s_table_cell_bold),
+            Paragraph("<b>Rôle :</b> Fournir une interface réactive permettant la saisie de requêtes et le téléversement de photographies d'atelier.<br/>"
+                      "<b>Entrées :</b> Questions textuelles en français, fichiers images (JPEG/PNG), clics d'approbation de tickets.<br/>"
+                      "<b>Sorties :</b> Affichage des réponses sourcées, visualisation interactive des schémas/figures cités, formulaires de validation.<br/>"
+                      "<b>Outil retenu :</b> <b>Streamlit</b> (Alternative évaluée : Next.js / Tailwind pour usage sur tablette durcie d'atelier).", s_table_cell)
         ],
         [
             Paragraph("<b>Bloc 2 : Passerelle API (Gateway)</b>", s_table_cell_bold),
-            Paragraph("<b>Rôle :</b> Sécuriser l'accès, authentifier les sessions utilisateurs et router les requêtes vers le moteur agentique.<br/>"
-                      "<b>Entrées :</b> Requêtes HTTP multipart/form-data, en-têtes Authorization Bearer JWT.<br/>"
-                      "<b>Sorties :</b> Flux JSON validés, codes d'erreur 401/403 en cas de violation d'accès, métriques d'audit.<br/>"
-                      "<b>Outil retenu :</b> <b>FastAPI</b> avec OAuth2 / JWT (alternative : Litestar).", s_table_cell)
+            Paragraph("<b>Rôle :</b> Gérer l'authentification des techniciens, le contrôle de débit (rate limiting) et la traçabilité des sessions.<br/>"
+                      "<b>Entrées :</b> Requêtes HTTP multipart/form-data, jetons Bearer JWT, en-têtes d'identification atelier.<br/>"
+                      "<b>Sorties :</b> Flux JSON validés par schémas Pydantic, refus d'accès 401/403, journaux d'audit horodatés.<br/>"
+                      "<b>Outil retenu :</b> <b>FastAPI asynchrone</b> (Alternative évaluée : Litestar).", s_table_cell)
         ],
         [
             Paragraph("<b>Bloc 3 : Orchestrateur Agentique</b>", s_table_cell_bold),
-            Paragraph("<b>Rôle :</b> Gérer l'état conversationnel, le raisonnement itératif, les boucles d'outils et l'interruption pour validation humaine.<br/>"
-                      "<b>Entrées :</b> Requête analysée, retours d'outils MCP, retours du moteur de recherche RAG.<br/>"
-                      "<b>Sorties :</b> Décisions de routage (recherche, question de précision, brouillon de ticket, réponse finale).<br/>"
-                      "<b>Outil retenu :</b> <b>LangGraph & LangChain</b> (alternative : LlamaIndex Workflows).", s_table_cell)
+            Paragraph("<b>Rôle :</b> Piloter la machine à états finis, le raisonnement itératif, les boucles d'outils et l'interruption humaine.<br/>"
+                      "<b>Entrées :</b> État courant de la requête, retours d'extraction documentaire, retours du serveur MCP.<br/>"
+                      "<b>Sorties :</b> Transitions d'état (Recherche -> Synthèse -> Demande de validation -> Émission de ticket).<br/>"
+                      "<b>Outil retenu :</b> <b>LangGraph & LangChain</b> avec persistance d'état SQLite/Postgres.", s_table_cell)
         ],
         [
-            Paragraph("<b>Bloc 4 : Recherche RAG Multimodale</b>", s_table_cell_bold),
-            Paragraph("<b>Rôle :</b> Indexer et rechercher les passages textuels et les éléments visuels les plus pertinents sous contrainte RBAC.<br/>"
-                      "<b>Entrées :</b> Vecteurs de requête (dense, sparse, visuel), filtre d'attributs utilisateur.<br/>"
-                      "<b>Sorties :</b> Top-K passages textuels, tables et figures avec scores de pertinence réordonnés.<br/>"
-                      "<b>Outil retenu :</b> <b>Qdrant</b> + BGE-M3 (texte) + SigLIP (image) + BGE-Reranker-v2 (alternative : Milvus / Chroma).", s_table_cell)
+            Paragraph("<b>Bloc 4 : Moteur de Recherche Hybride</b>", s_table_cell_bold),
+            Paragraph("<b>Rôle :</b> Indexer et rechercher les passages textuels et visuels pertinents sous contrainte d'habilitation RBAC.<br/>"
+                      "<b>Entrées :</b> Embeddings denses BGE-M3 (texte), vecteurs SigLIP (image) et sparse tokens SPLADE.<br/>"
+                      "<b>Sorties :</b> Top-K extraits documentaires réordonnés par BGE-Reranker-v2 avec scores de pertinence normalisés.<br/>"
+                      "<b>Outil retenu :</b> <b>Qdrant Vector Database</b> (Alternative évaluée : Milvus / pgvector).", s_table_cell)
         ],
         [
             Paragraph("<b>Bloc 5 : Modèle Vision-Langage (VLM)</b>", s_table_cell_bold),
-            Paragraph("<b>Rôle :</b> Décrire les images d'entrée, reconnaître les voyants/avaries et synthétiser les réponses sourcées.<br/>"
-                      "<b>Entrées :</b> Prompt système strict, passages documentaires autorisés, image d'entrée encodée.<br/>"
-                      "<b>Sorties :</b> Texte de réponse structuré avec citations formelles et mention des incertitudes.<br/>"
-                      "<b>Outil retenu :</b> <b>Qwen2.5-VL-7B-Instruct</b> via vLLM / Transformers (alternative : Pixtral-12B / Llama-3.2-Vision).", s_table_cell)
+            Paragraph("<b>Rôle :</b> Analyser les clichés photographiques, extraire les anomalies visibles et rédiger la réponse sourcée.<br/>"
+                      "<b>Entrées :</b> Prompt système strict, passages documentaires vérifiés, image téléversée prétraitée.<br/>"
+                      "<b>Sorties :</b> Diagnostic structuré en JSON, liste des incertitudes, citations formelles [doc_id, page, figure].<br/>"
+                      "<b>Outil retenu :</b> <b>Qwen2.5-VL-7B-Instruct</b> sous quantification AWQ via vLLM.", s_table_cell)
         ],
         [
-            Paragraph("<b>Bloc 6 : Serveur d'Outils MCP</b>", s_table_cell_bold),
-            Paragraph("<b>Rôle :</b> Fournir une interface standardisée pour interroger la base de maintenance d'atelier et enregistrer les tickets.<br/>"
-                      "<b>Entrées :</b> Appels RPC normalisés (<code>equipment_id</code>, paramètres de ticket, approval_token).<br/>"
-                      "<b>Sorties :</b> Historiques d'interventions, liste des tickets ouverts, confirmation de création de ticket.<br/>"
-                      "<b>Outil retenu :</b> <b>Serveur MCP Python officiel</b> (FastMCP / MCP SDK) (alternative : API REST OpenAPI directe).", s_table_cell)
+            Paragraph("<b>Bloc 6 : Serveur d'Outils d'Atelier (MCP)</b>", s_table_cell_bold),
+            Paragraph("<b>Rôle :</b> Exposer de façon standardisée les opérations de maintenance (GMAO) selon le protocole Model Context Protocol.<br/>"
+                      "<b>Entrées :</b> Appels RPC normalisés (<code>get_equipment_history</code>, <code>create_ticket</code> avec token signé).<br/>"
+                      "<b>Sorties :</b> Historiques d'interventions antérieures, identifiants de tickets créés (TK-xxxx).<br/>"
+                      "<b>Outil retenu :</b> <b>FastMCP Python SDK</b> officiel.", s_table_cell)
         ],
         [
-            Paragraph("<b>Bloc 7 : Couche de Stockage</b>", s_table_cell_bold),
-            Paragraph("<b>Rôle :</b> Conserver de manière persistante les fichiers bruts (PDFs, images) et les métadonnées relationnelles.<br/>"
-                      "<b>Entrées :</b> Fichiers binaires du corpus, tables d'inventaire, profils utilisateurs et logs d'audit.<br/>"
-                      "<b>Sorties :</b> Documents originaux servis à l'affichage, tables de droits d'accès.<br/>"
-                      "<b>Outil retenu :</b> <b>PostgreSQL</b> (métadonnées & rôles) + <b>MinIO</b> (stockage objet S3 local) (alternative : SQLite + stockage disque).", s_table_cell)
+            Paragraph("<b>Bloc 7 : Couche de Stockage Persistant</b>", s_table_cell_bold),
+            Paragraph("<b>Rôle :</b> Conserver l'historique relationnel, les profils d'accès utilisateurs et archiver les fichiers binaires originaux.<br/>"
+                      "<b>Entrées :</b> Fichiers PDF et images bruts du corpus, tables utilisateurs, journaux d'audit de sécurité.<br/>"
+                      "<b>Sorties :</b> Fichiers originaux servis aux techniciens, métadonnées relationnelles pour les filtres d'API.<br/>"
+                      "<b>Outil retenu :</b> <b>PostgreSQL</b> (tables relationnelles) + <b>MinIO</b> (stockage objet compatible S3).", s_table_cell)
         ]
     ]
-    t_blocks = Table(blocks_data, colWidths=[130, 378])
+    t_blocks = Table(blocks_data, colWidths=[130, 375])
     t_blocks.setStyle(TableStyle([
         ('BOX', (0,0), (-1,-1), 1, c_border),
         ('INNERGRID', (0,0), (-1,-1), 0.5, c_border),
-        ('TOPPADDING', (0,0), (-1,-1), 3),
-        ('BOTTOMPADDING', (0,0), (-1,-1), 3),
+        ('TOPPADDING', (0,0), (-1,-1), 2.5),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 2.5),
     ]))
     story.append(t_blocks)
 
@@ -704,73 +705,73 @@ def build_pdf(filename="L1_MaintiDoc_ELAOUAZI-SOUILI-YEKHLEF_Rapport.pdf"):
     # =========================================================================
     story.append(Paragraph("2.3.3 Parcours Pas à Pas d'une Requête Technicien (Modèle de Raisonnement)", s_h2))
     story.append(Paragraph(
-        "Pour illustrer le comportement dynamique du système, considérons le scénario réel suivant :<br/>"
-        "<i>Un technicien de l'atelier pneumatique transmet la photographie d'une roue présentant un renflement sur le flanc, "
-        "accompagnée de la question : « Ce pneu présente une bosse sur le côté. Quelle est la cause et est-ce réparable en atelier ? »</i>", s_body))
+        "Pour valider la logique du graphe d'états LangGraph, étudions le déroulement complet d'un cas d'atelier réel :<br/>"
+        "<i>« Un opérateur en atelier pneumatique téléverse la photo d'un pneu présentant une protubérance sur le flanc, "
+        "avec la question suivante : 'Ce pneumatique a une bosse sur le flanc suite à un choc trottoir. Peut-on réparer avec une cheville ?' »</i>", s_body))
 
     journey_steps = [
-        "<b>Étape 1 — Authentification et récupération du profil :</b> La passerelle FastAPI intercepte la requête, vérifie le jeton JWT "
-        "et extrait le profil utilisateur (<code>role = technicien_pneumatiques</code>). Ce profil détermine le scope documentaire autorisé.",
+        "<b>Étape 1 — Authentification et portée d'accès (Gateway) :</b> La passerelle FastAPI valide le token de session JWT. "
+        "L'utilisateur est identifié avec le rôle <code>techniciens_pneumatiques</code>. Ce rôle constitue le filtre pré-attribut de la session.",
 
-        "<b>Étape 2 — Analyse visuelle préliminaire par le VLM :</b> L'image est transmise au modèle vision-langage Qwen2.5-VL-7B. "
-        "Le modèle génère une description objective : <i>« Déformation hémisphérique proéminente (hernie) située sur la zone médiane du flanc "
-        "extérieur d'un pneumatique de dimension 205/55 R16. Absence de déchirure apparente de la gomme extérieure. »</i>",
+        "<b>Étape 2 — Extraction visuelle objective (VLM) :</b> Le cliché est transmis au modèle vision-langage Qwen2.5-VL-7B. "
+        "Le modèle décrit l'image sans halluciner de diagnostic : <i>« Pneumatique radial monté sur jante aluminium. Présence d'un renflement localisé "
+        "de forme semi-sphérique d'environ 3 cm sur la zone médiane du flanc extérieur. Absence de perforation visible de la gomme de surface. »</i>",
 
-        "<b>Étape 3 — Recherche documentaire hybride sous contrainte RBAC :</b> La description visuelle et la question textuelle sont "
-        "vectorisées (BGE-M3 + SigLIP). Qdrant exécute une recherche hybride dense/sparse filtrée sur <code>famille_equipement == 'pneumatiques'</code> "
-        "et accessible à <code>techniciens_pneumatiques</code>. Le système récupère le document <code>pne_05_sidewall_bulge</code> (page 1 et 2).",
+        "<b>Étape 3 — Recherche documentaire sous pré-filtrage RBAC (Qdrant) :</b> La description visuelle et les mots-clés sont vectorisés. "
+        "Qdrant applique le pré-filtre : <code>famille_equipement == 'pneumatiques' AND groupe_acces IN ['techniciens_pneumatiques', 'responsables']</code>. "
+        "Le moteur extrait le document <code>pne_05_sidewall_bulge</code> (page 1 et 2). Les documents non autorisés sont exclus physiquement de la recherche.",
 
-        "<b>Étape 4 — Reranking et consultation de l'historique MCP :</b> Le composant BGE-Reranker-v2 réordonne les passages. Constatant "
-        "une avarie structurelle lourde, l'orchestrateur LangGraph interroge l'outil MCP <code>get_equipment_history('PNEU-TR-01')</code> pour "
-        "vérifier si le train de pneus a subi un choc récent sur trottoir lors de la dernière révision.",
+        "<b>Étape 4 — Reranking et consultation de l'historique équipement (MCP) :</b> Le reranker BGE-Reranker-v2 place la procédure "
+        "d'alerte de hernie en rang 1. L'orchestrateur déclenche un appel MCP <code>get_equipment_history('PNEU-TR-01')</code> pour vérifier "
+        "si ce véhicule a subi une intervention récente sur le train avant.",
 
-        "<b>Étape 5 — Synthèse de la réponse et vérification des citations (Evidence Checker) :</b> Le VLM rédige la réponse en citant "
-        "formellement la figure <code>PNE-05-F1</code> et la page 2 du document. Le vérificateur Pydantic s'assure que l'affirmation "
-        "<i>« Rupture interne de la nappe carcasse radiale, interdiction formelle de réparer, risque d'éclatement immédiat »</i> est "
-        "rigoureusement soutenue par le texte de la fiche de sécurité.",
+        "<b>Étape 5 — Formulation et contrôle de fidélité des citations (Evidence Grounding) :</b> Le VLM rédige la réponse technique en citant "
+        "la figure <code>PNE-05-F1</code> et la page 2 de la fiche de sécurité : <i>« Rupture structurelle interne des nappes de carcasse métallique. "
+        "Interdiction absolue de réparer (danger mortel d'éclatement à haute vitesse). Remplacement obligatoire du pneumatique. »</i> "
+        "Le validateur Pydantic vérifie que l'affirmation est formellement soutenue par le texte extrait.",
 
-        "<b>Étape 6 — Préparation du ticket et interruption humaine (HITL) :</b> MaintiDoc formule la réponse au technicien et ajoute "
-        "une proposition de ticket de remplacement : <i>« Brouillon de ticket : Échange standard pneumatique AV gauche suite hernie flanc »</i>. "
-        "L'agent se met en état de veille (suspend) et n'appelle <code>create_ticket</code> qu'après validation explicite du technicien à l'écran."
+        "<b>Étape 6 — Préparation du ticket et suspension Human-in-the-Loop :</b> MaintiDoc prépare le brouillon de ticket d'atelier : "
+        "<i>[TK-DRAFT] Échange standard pneumatique AV Gauche - Rupture carcasse</i>. L'agent suspend son exécution. L'ordre de travail n'est envoyé "
+        "au serveur MCP que lorsque le technicien clique explicitement sur 'Approuver la création du ticket' sur son écran."
     ]
     for stp in journey_steps:
         story.append(Paragraph(f"• {stp}", s_bullet))
 
-    story.append(Spacer(1, 8))
+    story.append(Spacer(1, 5))
     story.append(Paragraph("2.3.4 Questions Ouvertes et Hypothèses à Vérifier (Semaines 2 à 6)", s_h2))
     story.append(Paragraph(
-        "Le cadrage de la Semaine 1 a permis d'identifier plusieurs questions techniques ouvertes qui feront l'objet de benchmarks dédiés :", s_body))
+        "Ce premier jalon d'architecture met en évidence quatre questions techniques majeures qui guideront nos expérimentations :", s_body))
 
     open_q_data = [
-        [Paragraph("<b>Hypothèse / Question Ouverte</b>", s_table_header), Paragraph("<b>Enjeu Opérationnel & Méthode de Validation Prévue</b>", s_table_header)],
+        [Paragraph("<b>Question Ouverte / Hypothèse</b>", s_table_header), Paragraph("<b>Impact Système & Protocole de Validation Semaines 2-5</b>", s_table_header)],
         [
-            Paragraph("<b>Q1 : Empreinte VRAM du modèle Qwen2.5-VL-7B</b>", s_table_cell_bold),
-            Paragraph("<i>Hypothèse :</i> Le modèle 7B quantifié en 4-bit AWQ tient dans 12 Go de VRAM et permet une fenêtre de contexte de 8k tokens sans dépassement mémoire.<br/>"
-                      "<i>Validation en Semaine 3 :</i> Mesure de la mémoire allouée sous vLLM lors de requêtes multimodales concurrentes.", s_table_cell)
+            Paragraph("<b>H1 : Tenue de la mémoire GPU sous vLLM</b>", s_table_cell_bold),
+            Paragraph("<i>Hypothèse :</i> L'utilisation de Qwen2.5-VL-7B en quantification 4-bit AWQ avec PagedAttention maintiendra l'empreinte VRAM sous 13 Go lors de contextes de 8 192 tokens.<br/>"
+                      "<i>Validation en Semaine 3 :</i> Mesure des pics de mémoire GPU lors de traitements concurrents texte + image haute définition.", s_table_cell)
         ],
         [
-            Paragraph("<b>Q2 : Nécessité d'un pipeline OCR systématique</b>", s_table_cell_bold),
-            Paragraph("<i>Hypothèse :</i> Appliquer un OCR local sur tous les PDF ralentit inutilement l'ingestion ; un aiguillage préalable par détection de texte natif PyMuPDF est optimal.<br/>"
-                      "<i>Validation en Semaine 2 :</i> Benchmark comparatif de temps d'ingestion sur les 45 documents du corpus.", s_table_cell)
+            Paragraph("<b>H2 : Débit et nécessité de l'OCR local</b>", s_table_cell_bold),
+            Paragraph("<i>Hypothèse :</i> Déclencher un OCR systématique pénalise inutilement la latence. Un aiguillage préalable détectant les pages sans calque texte (PyMuPDF) optimise les flux.<br/>"
+                      "<i>Validation en Semaine 2 :</i> Mesure du temps d'ingestion comparé sur les 43 PDF natifs vs les 2 PDF scannés dégradés.", s_table_cell)
         ],
         [
-            Paragraph("<b>Q3 : Apport du Fine-Tuning du Reranker</b>", s_table_cell_bold),
-            Paragraph("<i>Hypothèse :</i> L'adaptation d'un reranker léger sur 1 000 triplets spécialisés (question, passage positif, négatif difficile) améliorera le nDCG@5 de plus de 8%.<br/>"
-                      "<i>Validation en Semaine 5 :</i> Comparaison formelle avant/après adaptation sur le jeu de test de 150 scénarios.", s_table_cell)
+            Paragraph("<b>H3 : Efficience du Fine-Tuning du Reranker</b>", s_table_cell_bold),
+            Paragraph("<i>Hypothèse :</i> L'entraînement supervisé d'un petit reranker multilingue sur 1 000 triplets mécaniques améliorera le nDCG@5 d'au moins 7% sur les cas d'atelier ambigus.<br/>"
+                      "<i>Validation en Semaine 5 :</i> Comparaison formelle avant/après adaptation sur notre jeu de test de 150 scénarios.", s_table_cell)
         ],
         [
-            Paragraph("<b>Q4 : Résistance aux injections masquées dans les images OCR</b>", s_table_cell_bold),
-            Paragraph("<i>Hypothèse :</i> Un payload malveillant dissimulé dans une image scannée (tampon ou texte manuscrit) peut tromper l'agent si l'OCR injecte le texte sans balisage.<br/>"
-                      "<i>Validation en Semaine 5 :</i> Test de neutralisation en isolant le flux OCR comme donnée passive stricte.", s_table_cell)
+            Paragraph("<b>H4 : Sécurité face aux attaques visuelles masquées</b>", s_table_cell_bold),
+            Paragraph("<i>Hypothèse :</i> Des instructions malveillantes incrustées dans des tampons d'atelier scannés peuvent être neutralisées si l'OCR étiquette le texte extrait comme 'donnée externe non fiable'.<br/>"
+                      "<i>Validation en Semaine 5 :</i> Banc d'essai d'injections multimodales directes et indirectes.", s_table_cell)
         ]
     ]
-    t_oq = Table(open_q_data, colWidths=[150, 358])
+    t_oq = Table(open_q_data, colWidths=[150, 355])
     t_oq.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), c_primary),
+        ('BACKGROUND', (0,0), (-1,0), c_navy),
         ('BOX', (0,0), (-1,-1), 1, c_border),
         ('INNERGRID', (0,0), (-1,-1), 0.5, c_border),
-        ('TOPPADDING', (0,0), (-1,-1), 3),
-        ('BOTTOMPADDING', (0,0), (-1,-1), 3),
+        ('TOPPADDING', (0,0), (-1,-1), 2.5),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 2.5),
     ]))
     story.append(t_oq)
 
@@ -780,94 +781,94 @@ def build_pdf(filename="L1_MaintiDoc_ELAOUAZI-SOUILI-YEKHLEF_Rapport.pdf"):
     # PAGE 9 : SECTION 2.4 - FLUX DE DONNÉES ET MODÈLE D'ACCÈS
     # =========================================================================
     story.append(Paragraph("2.4 Flux de Données et Modèle d'Accès", s_h1))
-    story.append(Paragraph("2.4.1 Flux de Données d'Ingestion Documentaire (Pipeline ETL)", s_h2))
+    story.append(Paragraph("2.4.1 Pipeline d'Ingestion Documentaire Multimodale (ETL)", s_h2))
     story.append(Paragraph(
-        "Le pipeline d'ingestion transforme les fichiers bruts hétérogènes (PDF texte, PDF scannés, photographies) en éléments "
-        "indexés enrichis de métadonnées de contrôle d'accès :", s_body))
+        "Le pipeline d'ingestion prend en charge l'hétérogénéité des documents d'atelier et les transforme en représentations "
+        "vectorielles et textuelles sécurisées :", s_body))
 
     ingest_img_path = "docs/diagrammes/flux_donnees_ingestion.png"
     if os.path.exists(ingest_img_path):
-        story.append(RLImage(ingest_img_path, width=490, height=210))
-        story.append(Spacer(1, 4))
+        story.append(RLImage(ingest_img_path, width=490, height=205))
+        story.append(Spacer(1, 2))
 
     story.append(Paragraph("2.4.2 Flux d'une Requête Technicien (RAG Sourcé & Multimodal)", s_h2))
     story.append(Paragraph(
-        "Le traitement d'une requête associe vision par ordinateur, recherche hybride sous contrôle RBAC et validation de citations :", s_body))
+        "Le parcours d'une requête combine l'analyse visuelle de l'image d'atelier et la recherche documentaire filtrée :", s_body))
 
     query_img_path = "docs/diagrammes/flux_requete_rag.png"
     if os.path.exists(query_img_path):
-        story.append(RLImage(query_img_path, width=490, height=215))
-        story.append(Spacer(1, 4))
+        story.append(RLImage(query_img_path, width=490, height=205))
+        story.append(Spacer(1, 2))
 
     story.append(PageBreak())
 
     # =========================================================================
-    # PAGE 10 : SECTION 2.4 (SUITE) - FLUX TICKET MCP ET MODÈLE D'ACCÈS
+    # PAGE 10 : SECTION 2.4 (SUITE) - FLUX TICKET MCP ET MODÈLE RBAC
     # =========================================================================
     story.append(Paragraph("2.4.3 Flux Sécurisé de Création de Ticket MCP (HITL & Idempotence)", s_h2))
     story.append(Paragraph(
-        "La création d'un ordre de travail constitue une action sensible qui ne doit jamais être exécutée sans supervision humaine :", s_body))
+        "L'ouverture d'un ordre de réparation constitue une action engageante qui nécessite une barrière de validation humaine inviolable :", s_body))
 
     mcp_img_path = "docs/diagrammes/flux_creation_ticket_mcp.png"
     if os.path.exists(mcp_img_path):
-        story.append(RLImage(mcp_img_path, width=490, height=200))
-        story.append(Spacer(1, 6))
+        story.append(RLImage(mcp_img_path, width=490, height=190))
+        story.append(Spacer(1, 4))
 
-    story.append(Paragraph("2.4.4 Schéma des Métadonnées d'un Élément Indexé", s_h2))
+    story.append(Paragraph("2.4.4 Schéma Formel des Métadonnées d'un Fragment Indexé", s_h2))
     story.append(Paragraph(
-        "Chaque fragment textuel ou élément visuel stocké dans Qdrant conserve une charge utile (*payload*) JSON standardisée :", s_body))
+        "Chaque extrait textuel et chaque illustration indexés dans Qdrant sont accompagnés d'un payload normalisé :", s_body))
 
     meta_json_str = (
         "{\n"
-        '  "chunk_id": "tdb_01_p02_c03",               // Identifiant unique de chunk\n'
-        '  "document_id": "tdb_01_voyant_pression_huile", // ID stable du document source\n'
-        '  "version": "v1.0 (2026-11)",                 // Version pour détection d\'obsolescence\n'
-        '  "page_number": 2,                           // Numéro de page exact (citation vérifiable)\n'
-        '  "element_type": "procedure_step",           // paragraph | table | figure | procedure_step\n'
-        '  "element_id": "proc_step_4",                // Identifiant d\'élément ou de figure (ex: TDB-01-F1)\n'
-        '  "famille_equipement": "tableaux_de_bord",   // tableaux_de_bord | pneumatiques\n'
-        '  "equipement_id": "TDB-MOTEUR-01",            // Référence cohérente avec la GMAO MCP\n'
-        '  "groupes_acces": ["techniciens_tdb", "responsables"], // Groupes RBAC autorisés\n'
-        '  "content_hash": "a8f3b2c9...",              // Empreinte SHA256 pour traçabilité\n'
-        '  "is_ocr": false                             // Flag indiquant si issu d\'un scan OCR dégradé\n'
+        '  "chunk_id": "tdb_01_p02_c03",                 // Identifiant unique déterministe de fragment\n'
+        '  "document_id": "tdb_01_voyant_pression_huile",   // Identifiant stable réutilisé pour les citations\n'
+        '  "version": "v1.0 (2026-11)",                   // Version pour le contrôle d\'obsolescence\n'
+        '  "page_number": 2,                             // Numéro de page exact dans le document source\n'
+        '  "element_type": "procedure_step",             // paragraph | table | figure | procedure_step\n'
+        '  "element_id": "figure_tdb_01_f1",             // Identifiant d\'élément visuel ou d\'étape d\'atelier\n'
+        '  "famille_equipement": "tableaux_de_bord",     // tableaux_de_bord | pneumatiques\n'
+        '  "equipement_id": "TDB-MOTEUR-01",              // Référence équipement synchronisée avec la base MCP\n'
+        '  "groupes_acces": ["techniciens_tdb", "responsables"], // Attributs de sécurité RBAC pour pré-filtrage\n'
+        '  "content_hash": "e3b0c44298fc1c149afbf4c8...", // Empreinte SHA256 pour audit d\'intégrité documentaire\n'
+        '  "is_ocr": false                               // Booléen traçant si l\'extrait provient d\'un scan dégradé\n'
         "}"
     )
-    story.append(make_box(Paragraph(f"<pre>{meta_json_str}</pre>", s_code), bg_color='#F8FAFC', border_color='#CBD5E1', padding=4))
+    story.append(make_box(Paragraph(f"<pre>{meta_json_str}</pre>", s_code), bg_color='#F8FAFC', border_color='#CBD5E1', padding=3))
 
-    story.append(Spacer(1, 6))
-    story.append(Paragraph("2.4.5 Modèle d'Accès et Matrice de Ségrégation des Rôles (RBAC)", s_h2))
+    story.append(Spacer(1, 4))
+    story.append(Paragraph("2.4.5 Modèle de Contrôle d'Accès par Rôles (RBAC d'Atelier)", s_h2))
     story.append(Paragraph(
-        "Le modèle d'accès repose sur trois groupes d'utilisateurs d'atelier avec filtrage au niveau de la base vectorielle :", s_body))
+        "Notre modèle d'accès segmente l'atelier en trois groupes avec étanchéité garantie :", s_body))
 
     rbac_table = [
-        [Paragraph("<b>Groupe d'Accès</b>", s_table_header), Paragraph("<b>Documents Autorisés</b>", s_table_header), 
-         Paragraph("<b>Documents Formellement Interdits (Refus d'Accès)</b>", s_table_header), Paragraph("<b>Outils MCP Autorisés</b>", s_table_header)],
+        [Paragraph("<b>Groupe d'Habilitation</b>", s_table_header), Paragraph("<b>Documents Autorisés en Consultation</b>", s_table_header), 
+         Paragraph("<b>Documents Strictement Interdits (Blocage Immédiat)</b>", s_table_header), Paragraph("<b>Prérogatives MCP</b>", s_table_header)],
         [
             Paragraph("<b><code>techniciens_tdb</code></b>", s_table_cell_bold),
-            Paragraph("Procédures combinés de bord, témoins voyants moteur, boîte, FAP, documents partagés (TPMS).", s_table_cell),
-            Paragraph("Fiches pneumatiques physiques, documents pyrotechniques Airbag (TDB-08), antidémarrage (TDB-18), notes confidentielles.", s_table_cell),
+            Paragraph("Procédures combinés de bord, témoins voyants moteur, boîte automatique, FAP, documents partagés (TPMS).", s_table_cell),
+            Paragraph("Fiches pneumatiques physiques, documents pyrotechniques Airbag (TDB-08), antidémarrage antivol (TDB-18), notes confidentielles.", s_table_cell),
             Paragraph("<code>get_equipment_history</code>,<br/><code>create_ticket</code> (validé)", s_table_cell)
         ],
         [
             Paragraph("<b><code>techniciens_pneumatiques</code></b>", s_table_cell_bold),
-            Paragraph("Fiches crevaison, usures de bande, géométrie, amortisseurs, documents partagés (TPMS, alerte révision).", s_table_cell),
+            Paragraph("Fiches crevaison, usures de bande, géométrie 3D, amortisseurs, documents partagés (TPMS, alerte révision).", s_table_cell),
             Paragraph("Procédures calculateurs combiné, diagnostic boîte automatique, antidémarrage, fiches haute tension.", s_table_cell),
             Paragraph("<code>get_equipment_history</code>,<br/><code>create_ticket</code> (validé)", s_table_cell)
         ],
         [
             Paragraph("<b><code>responsables</code></b>", s_table_cell_bold),
-            Paragraph("<b>Accès transverse intégral :</b> l'ensemble des 45 documents du corpus (incluant Airbag, antidémarrage et notes d'audit).", s_table_cell),
-            Paragraph("Aucune restriction documentaire (accès complet aux historiques et métadonnées d'audit).", s_table_cell),
-            Paragraph("<b>Tous les outils MCP</b> + consultation globale des tickets ouverts.", s_table_cell)
+            Paragraph("<b>Accès transverse intégral :</b> l'ensemble des 45 documents du corpus (incluant Airbag pyrotechnique, antidémarrage et notes d'audit).", s_table_cell),
+            Paragraph("Aucune restriction documentaire sur l'ensemble de la base d'atelier.", s_table_cell),
+            Paragraph("<b>Tous les outils MCP</b> + accès direct à <code>get_open_tickets</code> global.", s_table_cell)
         ]
     ]
-    t_rbac = Table(rbac_table, colWidths=[110, 150, 150, 98])
+    t_rbac = Table(rbac_table, colWidths=[110, 150, 150, 95])
     t_rbac.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), c_primary),
+        ('BACKGROUND', (0,0), (-1,0), c_navy),
         ('BOX', (0,0), (-1,-1), 1, c_border),
         ('INNERGRID', (0,0), (-1,-1), 0.5, c_border),
-        ('TOPPADDING', (0,0), (-1,-1), 3),
-        ('BOTTOMPADDING', (0,0), (-1,-1), 3),
+        ('TOPPADDING', (0,0), (-1,-1), 2.5),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 2.5),
     ]))
     story.append(t_rbac)
 
@@ -876,11 +877,11 @@ def build_pdf(filename="L1_MaintiDoc_ELAOUAZI-SOUILI-YEKHLEF_Rapport.pdf"):
     # =========================================================================
     # PAGE 11 : SECTION 2.5 - ANALYSE DES RISQUES
     # =========================================================================
-    story.append(Paragraph("2.5 Analyse des Risques", s_h1))
+    story.append(Paragraph("2.5 Analyse des Risques du Projet", s_h1))
     story.append(Paragraph(
-        "Une analyse prospective exhaustive a été menée pour couvrir l'ensemble des risques techniques, sécuritaires, "
-        "documentaires et organisationnels du projet. Neuf risques majeurs ont été caractérisés avec leur probabilité (1-3), "
-        "leur impact (1-3), leur criticité ($C = P \times I$), les mesures d'atténuation prévues et le responsable assigné :", s_body))
+        "Nous avons conduit une analyse rigoureuse des risques couvrant l'ensemble des aspects techniques, sécuritaires, "
+        "documentaires et humains. Neuf risques majeurs sont modélisés avec leur probabilité (1 à 3), leur impact opérationnel (1 à 3), "
+        "leur criticité ($C = P \times I$), les contre-mesures préventives/curatives associées et le membre responsable :", s_body))
 
     risk_table = [
         [
@@ -889,89 +890,89 @@ def build_pdf(filename="L1_MaintiDoc_ELAOUAZI-SOUILI-YEKHLEF_Rapport.pdf"):
             Paragraph("<b>P (1-3)</b>", s_table_header),
             Paragraph("<b>I (1-3)</b>", s_table_header),
             Paragraph("<b>Crit. (P×I)</b>", s_table_header),
-            Paragraph("<b>Mesures Préventives & Curatives Prévues</b>", s_table_header),
+            Paragraph("<b>Mesures Préventives & Palliatives Définies</b>", s_table_header),
             Paragraph("<b>Resp.</b>", s_table_header)
         ],
         [
             Paragraph("<b>R1 : Injection de prompt indirecte</b> (via document piégé)", s_table_cell_bold),
             Paragraph("Sécurité", s_table_cell),
             Paragraph("2", s_table_cell), Paragraph("3", s_table_cell), Paragraph("<b>6</b>", s_table_cell_bold),
-            Paragraph("Traitement des documents comme données passives (séparateurs XML stricts) ; exclusion des appels système directs ; tests dédiés en Semaine 5.", s_table_cell),
+            Paragraph("Isolation des textes documentaires sous balises XML passives ; interdiction formelle d'exécution d'instructions système ; banc de test dédié S5.", s_table_cell),
             Paragraph("Hafsa", s_table_cell_bold)
         ],
         [
-            Paragraph("<b>R2 : Hallucinations & citations non fondées</b>", s_table_cell_bold),
+            Paragraph("<b>R2 : Hallucinations & fausses citations</b>", s_table_cell_bold),
             Paragraph("Technique", s_table_cell),
             Paragraph("2", s_table_cell), Paragraph("3", s_table_cell), Paragraph("<b>6</b>", s_table_cell_bold),
-            Paragraph("Evidence Checker Pydantic automatisé vérifiant l'existence exacte de [doc_id, page, figure] ; consigne stricte d'abstention en prompt système.", s_table_cell),
+            Paragraph("Module Evidence Checker automatisé vérifiant la concordance textuelle exacte de [doc_id, page, figure] ; consigne stricte d'abstention en prompt système.", s_table_cell),
             Paragraph("Wiam", s_table_cell_bold)
         ],
         [
-            Paragraph("<b>R3 : Fuite de données entre groupes d'accès (RBAC)</b>", s_table_cell_bold),
+            Paragraph("<b>R3 : Fuite d'informations entre groupes (RBAC)</b>", s_table_cell_bold),
             Paragraph("Sécurité", s_table_cell),
             Paragraph("1", s_table_cell), Paragraph("3", s_table_cell), Paragraph("3", s_table_cell),
-            Paragraph("Pré-filtrage vectoriel déterministe dans Qdrant sur métadonnée groupe_acces avant retrieval ; double vérification post-retrieval dans l'API.", s_table_cell),
+            Paragraph("Pré-filtrage déterministe dans Qdrant sur les métadonnées groupe_acces avant tout calcul de similarité ; double contrôle post-recherche dans l'API.", s_table_cell),
             Paragraph("Aya", s_table_cell_bold)
         ],
         [
-            Paragraph("<b>R4 : Création autonome ou non approuvée de ticket</b>", s_table_cell_bold),
+            Paragraph("<b>R4 : Création autonome de ticket GMAO</b>", s_table_cell_bold),
             Paragraph("Sécurité / Métier", s_table_cell),
             Paragraph("1", s_table_cell), Paragraph("3", s_table_cell), Paragraph("3", s_table_cell),
-            Paragraph("Garde-fou humain absolu (Human-in-the-Loop) dans LangGraph ; émission d'un approval_token à usage unique ; clé d'idempotence anti-doublon.", s_table_cell),
+            Paragraph("Garde-fou humain absolu (Human-in-the-Loop) dans LangGraph ; émission d'un jeton d'approbation à usage unique ; clé d'idempotence anti-doublon.", s_table_cell),
             Paragraph("Wiam", s_table_cell_bold)
         ],
         [
-            Paragraph("<b>R5 : Erreurs techniques injectées par l'IA dans le corpus</b>", s_table_cell_bold),
+            Paragraph("<b>R5 : Erreurs techniques introduites par l'IA</b>", s_table_cell_bold),
             Paragraph("Données", s_table_cell),
             Paragraph("2", s_table_cell), Paragraph("3", s_table_cell), Paragraph("<b>6</b>", s_table_cell_bold),
-            Paragraph("Relecture humaine croisée systématique (double-blind) ; traçabilité intégrale dans prompts_corpus.md et inventaire.csv normalisé.", s_table_cell),
+            Paragraph("Relecture humaine systématique (double contrôle) ; traçabilité exhaustive dans prompts_corpus.md et inventaire.csv normalisé.", s_table_cell),
             Paragraph("Hafsa", s_table_cell_bold)
         ],
         [
-            Paragraph("<b>R6 : Non-conformité des licences documentaires</b>", s_table_cell_bold),
+            Paragraph("<b>R6 : Non-conformité des licences de documents</b>", s_table_cell_bold),
             Paragraph("Légal / Données", s_table_cell),
             Paragraph("1", s_table_cell), Paragraph("2", s_table_cell), Paragraph("2", s_table_cell),
-            Paragraph("Utilisation exclusive de fiches synthétiques originales et d'images ouvertes (Creative Commons CC BY / domaine public pédagogique).", s_table_cell),
+            Paragraph("Utilisation exclusive de textes synthétiques originaux et d'illustrations pédagogiques sous licence Creative Commons (CC BY / CC BY-SA).", s_table_cell),
             Paragraph("Aya", s_table_cell_bold)
         ],
         [
-            Paragraph("<b>R7 : Saturation mémoire GPU (OOM) et latences</b>", s_table_cell_bold),
+            Paragraph("<b>R7 : Dépassement de mémoire GPU (OOM)</b>", s_table_cell_bold),
             Paragraph("Technique", s_table_cell),
             Paragraph("2", s_table_cell), Paragraph("3", s_table_cell), Paragraph("<b>6</b>", s_table_cell_bold),
-            Paragraph("Quantification 4-bit (AWQ) du VLM Qwen2.5-VL ; moteur vLLM ; modèle léger de repli (ex. Moondream2 ou Phi-3.5-Vision) prêt à l'emploi.", s_table_cell),
+            Paragraph("Quantification 4-bit (AWQ) du modèle VLM Qwen2.5-VL ; moteur vLLM avec PagedAttention ; modèle compact de repli prêt à l'emploi si besoin.", s_table_cell),
             Paragraph("Wiam", s_table_cell_bold)
         ],
         [
-            Paragraph("<b>R8 : Défaillance ou indisponibilité du serveur MCP</b>", s_table_cell_bold),
+            Paragraph("<b>R8 : Indisponibilité du serveur MCP</b>", s_table_cell_bold),
             Paragraph("Technique", s_table_cell),
             Paragraph("2", s_table_cell), Paragraph("2", s_table_cell), Paragraph("4", s_table_cell),
-            Paragraph("Mise en place d'un bouchon (mock MCP) local autonome pour poursuivre le développement et les tests en cas de coupure réseau.", s_table_cell),
+            Paragraph("Implémentation d'un bouchon (mock MCP) local autonome pour poursuivre le développement et les tests en cas d'isolement réseau.", s_table_cell),
             Paragraph("Aya", s_table_cell_bold)
         ],
         [
-            Paragraph("<b>R9 : Désynchronisation ou retard dans l'équipe</b>", s_table_cell_bold),
+            Paragraph("<b>R9 : Désynchronisation dans l'équipe</b>", s_table_cell_bold),
             Paragraph("Organisation", s_table_cell),
             Paragraph("1", s_table_cell), Paragraph("2", s_table_cell), Paragraph("2", s_table_cell),
-            Paragraph("Points d'étape hebdomadaires synchronisés ; découpage strict des rôles ; intégration continue Git avec branches dédiées.", s_table_cell),
+            Paragraph("Points de synchronisation hebdomadaires ; séparation stricte des modules d'ingénierie ; intégration continue sur branches Git dédiées.", s_table_cell),
             Paragraph("Hafsa", s_table_cell_bold)
         ]
     ]
-    t_risk = Table(risk_table, colWidths=[105, 55, 30, 30, 35, 215, 38])
+    t_risk = Table(risk_table, colWidths=[105, 55, 30, 30, 35, 215, 35])
     t_risk.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), c_primary),
+        ('BACKGROUND', (0,0), (-1,0), c_navy),
         ('BOX', (0,0), (-1,-1), 1, c_border),
         ('INNERGRID', (0,0), (-1,-1), 0.5, c_border),
-        ('TOPPADDING', (0,0), (-1,-1), 2.5),
-        ('BOTTOMPADDING', (0,0), (-1,-1), 2.5),
+        ('TOPPADDING', (0,0), (-1,-1), 2.2),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 2.2),
         ('ALIGN', (2,0), (4,-1), 'CENTER'),
     ]))
     story.append(t_risk)
 
-    story.append(Spacer(1, 8))
+    story.append(Spacer(1, 6))
     story.append(Paragraph(
-        "<b>Synthèse de la matrice des risques :</b> Les risques les plus critiques ($C = 6$) concernent la sécurité des prompts (R1), "
-        "l'exactitude des citations documentaires (R2), la qualité des données du corpus (R5) et la saturation de la VRAM GPU (R7). "
-        "Chacun de ces risques fait l'objet d'un responsable désigné au sein de l'équipe et d'une mesure technique préventive intégrée dès la conception.", s_callout))
+        "<b>Bilan de criticité :</b> Les risques prioritaires identifiés ($C = 6$) relèvent de la sécurité des prompts (R1), "
+        "de la vérité terrain des citations (R2), de l'intégrité du corpus (R5) et du dimensionnement VRAM (R7). "
+        "Chacun de ces risques dispose d'une contre-mesure architecturale native et d'un membre référent au sein de notre binôme/trinôme.", s_callout))
 
     story.append(PageBreak())
 
@@ -979,184 +980,181 @@ def build_pdf(filename="L1_MaintiDoc_ELAOUAZI-SOUILI-YEKHLEF_Rapport.pdf"):
     # PAGE 12 : SECTION 2.6 - PLANNING ET ORGANISATION DE L'ÉQUIPE
     # =========================================================================
     story.append(Paragraph("2.6 Planning et Organisation de l'Équipe", s_h1))
-    story.append(Paragraph("2.6.1 Répartition des Rôles et Spécialisations", s_h2))
+    story.append(Paragraph("2.6.1 Répartition des Pôles d'Ingénierie", s_h2))
     story.append(Paragraph(
-        "Pour maximiser l'efficience collective et garantir une couverture technique rigoureuse, les responsabilités ont été "
-        "réparties en trois pôles de compétence complémentaires :", s_body))
+        "Pour garantir une rigueur d'exécution maximale sur les 6 semaines, chaque membre porte un pôle technique dédié :", s_body))
 
     roles_data = [
         [
-            Paragraph("<b>Membre de l'Équipe</b>", s_table_header),
-            Paragraph("<b>Rôle & Pôle de Spécialisation</b>", s_table_header),
-            Paragraph("<b>Missions Clés & Livrables Concrets Pris en Charge</b>", s_table_header)
+            Paragraph("<b>Ingénieure Responsable</b>", s_table_header),
+            Paragraph("<b>Pôle de Spécialisation</b>", s_table_header),
+            Paragraph("<b>Périmètre Technique Pris en Charge</b>", s_table_header)
         ],
         [
             Paragraph("<b>SOUILI Wiam</b><br/>Lead Architecture & Agentique", s_table_cell_bold),
-            Paragraph("Ingénierie Système, LangGraph, Passerelle FastAPI & Serveur MCP", s_table_cell),
-            Paragraph("• Conception de la machine à états LangGraph (nœuds, transitions, limites de boucle).<br/>"
-                      "• Développement de la passerelle FastAPI (authentification JWT, gestion RBAC).<br/>"
-                      "• Implémentation du serveur MCP maintenance et du mécanisme Human-in-the-Loop.<br/>"
-                      "• Conteneurisation globale avec Docker Compose et orchestration réseau.", s_table_cell)
+            Paragraph("Orchestration LangGraph, Passerelle FastAPI & Serveur MCP", s_table_cell),
+            Paragraph("• Développement de la machine à états finis LangGraph (routage, limites de boucle).<br/>"
+                      "• Conception de la passerelle FastAPI (authentification JWT, gestion des sessions d'atelier).<br/>"
+                      "• Implémentation du serveur d'outils MCP d'atelier et du mécanisme bloquant Human-in-the-Loop.<br/>"
+                      "• Conteneurisation générale avec Docker Compose et orchestration réseau.", s_table_cell)
         ],
         [
             Paragraph("<b>YEKHLEF Aya</b><br/>Lead RAG Multimodal & Recherche", s_table_cell_bold),
-            Paragraph("Pipeline d'Ingestion ETL, Qdrant, Embeddings & Reranker", s_table_cell),
-            Paragraph("• Développement du pipeline d'ingestion multimodale (PyMuPDF, segmentation sémantique).<br/>"
-                      "• Intégration du module OCR local (Surya / Tesseract) pour les documents scannés.<br/>"
-                      "• Déploiement et indexation de la base vectorielle Qdrant (BGE-M3 + SigLIP).<br/>"
-                      "• Fine-tuning ciblé du petit reranker multilingue sur données mécaniques (Semaine 5).", s_table_cell)
+            Paragraph("Pipeline Ingestion ETL, Qdrant, Embeddings & Reranker", s_table_cell),
+            Paragraph("• Développement du pipeline d'ingestion multimodale (PyMuPDF, segmentation par section).<br/>"
+                      "• Intégration et évaluation du module OCR local (Surya / Tesseract) pour les scans dégradés.<br/>"
+                      "• Déploiement et indexation de la base vectorielle Qdrant (BGE-M3 + SigLIP + sparse).<br/>"
+                      "• Fine-tuning supervisé du reranker multilingue sur vocabulaire d'atelier (Semaine 5).", s_table_cell)
         ],
         [
             Paragraph("<b>ELAOUAZI Hafsa</b><br/>Lead Évaluation, Sécurité & Corpus", s_table_cell_bold),
             Paragraph("Modèles VLM, Sécurité des Prompts, Schémas Pydantic & QA", s_table_cell),
             Paragraph("• Déploiement et benchmarking du modèle vision-langage Qwen2.5-VL-7B (vLLM / AWQ).<br/>"
-                      "• Modélisation des contrats d'interface Pydantic et du module Evidence Checker.<br/>"
+                      "• Conception des contrats d'interface Pydantic et du module Evidence Checker.<br/>"
                       "• Élaboration du jeu de test de 150 scénarios (ambiguïtés, contradictions, injections).<br/>"
-                      "• Mesure des métriques de recherche (Recall@5, nDCG@5, MRR@10) et tracking MLflow.", s_table_cell)
+                      "• Mesure des métriques de recherche (Recall@5, nDCG@5, MRR@10) et suivi MLflow.", s_table_cell)
         ]
     ]
-    t_roles = Table(roles_data, colWidths=[120, 140, 248])
+    t_roles = Table(roles_data, colWidths=[120, 140, 245])
     t_roles.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), c_primary),
+        ('BACKGROUND', (0,0), (-1,0), c_navy),
         ('BOX', (0,0), (-1,-1), 1, c_border),
         ('INNERGRID', (0,0), (-1,-1), 0.5, c_border),
-        ('TOPPADDING', (0,0), (-1,-1), 4),
-        ('BOTTOMPADDING', (0,0), (-1,-1), 4),
+        ('TOPPADDING', (0,0), (-1,-1), 3.5),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 3.5),
     ]))
     story.append(t_roles)
 
-    story.append(Spacer(1, 6))
-    story.append(Paragraph("2.6.2 Planning Prévisionnel Détaillé des Semaines 2 à 6", s_h2))
+    story.append(Spacer(1, 5))
+    story.append(Paragraph("2.6.2 Feuille de Route Chronologique des Semaines 2 à 6", s_h2))
     story.append(Paragraph(
-        "La feuille de route chronologique s'ajuste aux ressources réelles de l'équipe et aux exigences de chaque jalon hebdomadaire :", s_body))
+        "Notre planning prévisionnel est calibré sur les échéances hebdomadaires du projet :", s_body))
 
     planning_data = [
-        [Paragraph("<b>Semaine</b>", s_table_header), Paragraph("<b>Intitulé des Travaux</b>", s_table_header), 
-         Paragraph("<b>Objectifs Techniques & Tâches Concrètes</b>", s_table_header), Paragraph("<b>Livrable Associé</b>", s_table_header)],
+        [Paragraph("<b>Période</b>", s_table_header), Paragraph("<b>Jalon d'Ingénierie</b>", s_table_header), 
+         Paragraph("<b>Objectifs Techniques Concrets & Travaux de Développement</b>", s_table_header), Paragraph("<b>Livrable Associé</b>", s_table_header)],
         [
-            Paragraph("<b>Semaine 1</b><br/>(En cours)", s_table_cell_bold),
+            Paragraph("<b>Semaine 1</b><br/>(Clôturée)", s_table_cell_bold),
             Paragraph("Cadrage, corpus & architecture", s_table_cell),
-            Paragraph("• Définition du périmètre, personas et cas d'usage.<br/>"
-                      "• Constitution et validation du corpus de 45 documents (TDB & PNE).<br/>"
-                      "• Rédaction du rapport L1 et schémas d'architecture.", s_table_cell),
+            Paragraph("• Définition des profils d'atelier, cas d'usage et objectifs vérifiables.<br/>"
+                      "• Constitution et validation manuelle du corpus de 45 documents (TDB & PNE).<br/>"
+                      "• Rédaction du dossier d'architecture cible et analyse des risques.", s_table_cell),
             Paragraph("<b>Livrable 1</b><br/>Rapport PDF + ZIP corpus complet", s_table_cell_bold)
         ],
         [
             Paragraph("<b>Semaine 2</b>", s_table_cell_bold),
             Paragraph("Ingestion, recherche & gestion des accès", s_table_cell),
             Paragraph("• Développement du pipeline ETL (PyMuPDF + OCR local pour tdb_19 et pne_12).<br/>"
-                      "• Découpage en passages/figures et calcul embeddings (BGE-M3, SigLIP).<br/>"
-                      "• Indexation Qdrant avec filtrage métadonnées RBAC.", s_table_cell),
+                      "• Segmentation en fragments sémantiques et calcul des embeddings BGE-M3/SigLIP.<br/>"
+                      "• Indexation Qdrant avec pré-filtrage RBAC par métadonnées.", s_table_cell),
             Paragraph("<b>Livrable 2</b><br/>Dépôt Git documenté & index prêt", s_table_cell_bold)
         ],
         [
             Paragraph("<b>Semaine 3</b>", s_table_cell_bold),
             Paragraph("Intégration du VLM & sorties structurées", s_table_cell),
-            Paragraph("• Déploiement de Qwen2.5-VL-7B avec quantification AWQ sur GPU.<br/>"
-                      "• Prompting multimodal, validation sorties Pydantic.<br/>"
-                      "• Module Evidence Checker vérifiant citations documentaires exactes.", s_table_cell),
-            Paragraph("<b>Livrable 3 (P1)</b><br/>Prototype RAG multimodal opérationnel", s_table_cell_bold)
+            Paragraph("• Déploiement de Qwen2.5-VL-7B quantifié AWQ sous vLLM sur GPU.<br/>"
+                      "• Ingénierie des prompts multimodaux et validation stricte Pydantic.<br/>"
+                      "• Implémentation du module Evidence Checker vérifiant citations et figures.", s_table_cell),
+            Paragraph("<b>Livrable 3 (P1)</b><br/>Prototype RAG multimodal fonctionnel", s_table_cell_bold)
         ],
         [
             Paragraph("<b>Semaine 4</b>", s_table_cell_bold),
             Paragraph("Workflow LangGraph & connexion MCP", s_table_cell),
-            Paragraph("• Construction du graphe agentique avec nœuds de décision.<br/>"
-                      "• Implémentation du serveur MCP (historiques et tickets GMAO).<br/>"
-                      "• Mécanisme bloquant d'approbation humaine et clé d'idempotence.", s_table_cell),
+            Paragraph("• Construction de la machine à états finis avec gestion des boucles d'outils.<br/>"
+                      "• Implémentation du serveur MCP d'atelier (historiques et ordres de réparation).<br/>"
+                      "• Mécanisme bloquant d'approbation humaine (HITL) et clé d'idempotence.", s_table_cell),
             Paragraph("<b>Livrable 3 (P2)</b><br/>Prototype agentique complet avec MCP", s_table_cell_bold)
         ],
         [
             Paragraph("<b>Semaine 5</b>", s_table_cell_bold),
             Paragraph("Adaptation reranker & banc d'évaluation", s_table_cell),
-            Paragraph("• Constitution du dataset de fine-tuning (1 000 triplets spécialisés).<br/>"
-                      "• Entraînement et évaluation BGE-Reranker-v2 (nDCG@5, MRR@10).<br/>"
-                      "• Campagne de test sur 150 scénarios (injections, ambiguïtés, accès).", s_table_cell),
-            Paragraph("<b>Livrable 4</b><br/>Rapport d'évaluation & comparaisons", s_table_cell_bold)
+            Paragraph("• Construction du jeu de données de fine-tuning (1 000 triplets d'atelier).<br/>"
+                      "• Entraînement supervisé de BGE-Reranker-v2 et mesure nDCG@5 / MRR@10.<br/>"
+                      "• Campagne d'évaluation sur 150 scénarios (injections, ambiguïtés, RBAC).", s_table_cell),
+            Paragraph("<b>Livrable 4</b><br/>Rapport d'évaluation & benchmarks", s_table_cell_bold)
         ],
         [
             Paragraph("<b>Semaine 6</b>", s_table_cell_bold),
             Paragraph("Déploiement Docker, fiches & soutenance", s_table_cell),
-            Paragraph("• Finalisation Docker Compose, durcissement sécurité et logs MLflow.<br/>"
-                      "• Rédaction de la fiche de limites et conditions d'usage.<br/>"
-                      "• Répétition des démonstrations live (nominal, injection, HITL).", s_table_cell),
+            Paragraph("• Finalisation de la pile Docker Compose, durcissement et métriques MLflow.<br/>"
+                      "• Rédaction de la fiche de limites d'utilisation et conditions d'exploitation.<br/>"
+                      "• Répétition des démonstrations live (nominal, injection, HITL, dégradé).", s_table_cell),
             Paragraph("<b>Livrables 5 & 6</b><br/>Fiche de limites, démo & soutenance finale", s_table_cell_bold)
         ]
     ]
-    t_plan = Table(planning_data, colWidths=[65, 105, 245, 93])
+    t_plan = Table(planning_data, colWidths=[65, 105, 245, 90])
     t_plan.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), c_primary),
+        ('BACKGROUND', (0,0), (-1,0), c_navy),
         ('BOX', (0,0), (-1,-1), 1, c_border),
         ('INNERGRID', (0,0), (-1,-1), 0.5, c_border),
-        ('TOPPADDING', (0,0), (-1,-1), 2.5),
-        ('BOTTOMPADDING', (0,0), (-1,-1), 2.5),
+        ('TOPPADDING', (0,0), (-1,-1), 2.2),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 2.2),
     ]))
     story.append(t_plan)
 
     story.append(PageBreak())
 
     # =========================================================================
-    # PAGE 13 : SECTION 2.6 (SUITE) - MATRICE RACI ET CONCLUSION
+    # PAGE 13 : SECTION 2.6 (SUITE) - MATRICE RACI ET ENGAGEMENTS S2
     # =========================================================================
-    story.append(Paragraph("2.6.3 Matrice de Responsabilité RACI", s_h2))
+    story.append(Paragraph("2.6.3 Matrice de Responsabilité Opérationnelle (RACI)", s_h2))
     story.append(Paragraph(
-        "La matrice RACI (<i>Responsible, Accountable, Consulted, Informed</i>) formalise l'implication de chaque membre :", s_body))
+        "Pour éliminer tout chevauchement ou point d'incompréhension, la matrice RACI formalise nos contributions :", s_body))
 
     raci_data = [
-        [Paragraph("<b>Activité / Livrable Majeur</b>", s_table_header), 
+        [Paragraph("<b>Livrable / Responsabilité Technique</b>", s_table_header), 
          Paragraph("<b>Wiam SOUILI</b>", s_table_header), 
          Paragraph("<b>Aya YEKHLEF</b>", s_table_header), 
          Paragraph("<b>Hafsa ELAOUAZI</b>", s_table_header)],
-        [Paragraph("Constitution du corpus et inventaire normalisé", s_table_cell), Paragraph("C", s_table_cell_bold), Paragraph("C", s_table_cell_bold), Paragraph("<b>A / R</b>", ParagraphStyle('AR', parent=s_table_cell_bold, textColor=c_primary))],
-        [Paragraph("Pipeline ETL d'ingestion & module OCR", s_table_cell), Paragraph("I", s_table_cell), Paragraph("<b>A / R</b>", ParagraphStyle('AR', parent=s_table_cell_bold, textColor=c_primary)), Paragraph("C", s_table_cell_bold)],
-        [Paragraph("Indexation Qdrant & filtrage des métadonnées RBAC", s_table_cell), Paragraph("C", s_table_cell_bold), Paragraph("<b>A / R</b>", ParagraphStyle('AR', parent=s_table_cell_bold, textColor=c_primary)), Paragraph("I", s_table_cell)],
-        [Paragraph("Déploiement et optimisation du modèle VLM Qwen2.5-VL", s_table_cell), Paragraph("C", s_table_cell_bold), Paragraph("I", s_table_cell), Paragraph("<b>A / R</b>", ParagraphStyle('AR', parent=s_table_cell_bold, textColor=c_primary))],
-        [Paragraph("Machine à états LangGraph & orchestration agentique", s_table_cell), Paragraph("<b>A / R</b>", ParagraphStyle('AR', parent=s_table_cell_bold, textColor=c_primary)), Paragraph("C", s_table_cell_bold), Paragraph("C", s_table_cell_bold)],
-        [Paragraph("Serveur MCP maintenance & workflow Human-in-the-Loop", s_table_cell), Paragraph("<b>A / R</b>", ParagraphStyle('AR', parent=s_table_cell_bold, textColor=c_primary)), Paragraph("I", s_table_cell), Paragraph("C", s_table_cell_bold)],
-        [Paragraph("Fine-tuning supervisé du reranker multilingue", s_table_cell), Paragraph("I", s_table_cell), Paragraph("<b>A / R</b>", ParagraphStyle('AR', parent=s_table_cell_bold, textColor=c_primary)), Paragraph("C", s_table_cell_bold)],
-        [Paragraph("Banc d'évaluation (150 scénarios) & tests d'injection", s_table_cell), Paragraph("C", s_table_cell_bold), Paragraph("C", s_table_cell_bold), Paragraph("<b>A / R</b>", ParagraphStyle('AR', parent=s_table_cell_bold, textColor=c_primary))],
-        [Paragraph("Déploiement conteneurisé Docker Compose & MLOps", s_table_cell), Paragraph("<b>A / R</b>", ParagraphStyle('AR', parent=s_table_cell_bold, textColor=c_primary)), Paragraph("C", s_table_cell_bold), Paragraph("I", s_table_cell)]
+        [Paragraph("Constitution du corpus et inventaire normalisé", s_table_cell), Paragraph("C", s_table_cell_bold), Paragraph("C", s_table_cell_bold), Paragraph("<b>A / R</b>", ParagraphStyle('AR', parent=s_table_cell_bold, textColor=c_blue))],
+        [Paragraph("Pipeline ETL d'ingestion & module OCR", s_table_cell), Paragraph("I", s_table_cell), Paragraph("<b>A / R</b>", ParagraphStyle('AR', parent=s_table_cell_bold, textColor=c_blue)), Paragraph("C", s_table_cell_bold)],
+        [Paragraph("Indexation Qdrant & filtrage des métadonnées RBAC", s_table_cell), Paragraph("C", s_table_cell_bold), Paragraph("<b>A / R</b>", ParagraphStyle('AR', parent=s_table_cell_bold, textColor=c_blue)), Paragraph("I", s_table_cell)],
+        [Paragraph("Déploiement et optimisation du modèle VLM Qwen2.5-VL", s_table_cell), Paragraph("C", s_table_cell_bold), Paragraph("I", s_table_cell), Paragraph("<b>A / R</b>", ParagraphStyle('AR', parent=s_table_cell_bold, textColor=c_blue))],
+        [Paragraph("Machine à états LangGraph & orchestration agentique", s_table_cell), Paragraph("<b>A / R</b>", ParagraphStyle('AR', parent=s_table_cell_bold, textColor=c_blue)), Paragraph("C", s_table_cell_bold), Paragraph("C", s_table_cell_bold)],
+        [Paragraph("Serveur MCP maintenance & workflow Human-in-the-Loop", s_table_cell), Paragraph("<b>A / R</b>", ParagraphStyle('AR', parent=s_table_cell_bold, textColor=c_blue)), Paragraph("I", s_table_cell), Paragraph("C", s_table_cell_bold)],
+        [Paragraph("Fine-tuning supervisé du reranker multilingue", s_table_cell), Paragraph("I", s_table_cell), Paragraph("<b>A / R</b>", ParagraphStyle('AR', parent=s_table_cell_bold, textColor=c_blue)), Paragraph("C", s_table_cell_bold)],
+        [Paragraph("Banc d'évaluation (150 scénarios) & tests d'injection", s_table_cell), Paragraph("C", s_table_cell_bold), Paragraph("C", s_table_cell_bold), Paragraph("<b>A / R</b>", ParagraphStyle('AR', parent=s_table_cell_bold, textColor=c_blue))],
+        [Paragraph("Déploiement conteneurisé Docker Compose & MLOps", s_table_cell), Paragraph("<b>A / R</b>", ParagraphStyle('AR', parent=s_table_cell_bold, textColor=c_blue)), Paragraph("C", s_table_cell_bold), Paragraph("I", s_table_cell)]
     ]
-    t_raci = Table(raci_data, colWidths=[238, 90, 90, 90])
+    t_raci = Table(raci_data, colWidths=[235, 90, 90, 90])
     t_raci.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), c_primary),
+        ('BACKGROUND', (0,0), (-1,0), c_navy),
         ('BOX', (0,0), (-1,-1), 1, c_border),
         ('INNERGRID', (0,0), (-1,-1), 0.5, c_border),
-        ('TOPPADDING', (0,0), (-1,-1), 3),
-        ('BOTTOMPADDING', (0,0), (-1,-1), 3),
+        ('TOPPADDING', (0,0), (-1,-1), 2.5),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 2.5),
         ('ALIGN', (1,0), (-1,-1), 'CENTER'),
     ]))
     story.append(t_raci)
 
-    story.append(Spacer(1, 10))
-    story.append(Paragraph("Conclusion du Livrable 1 et Transition vers la Semaine 2", s_h2))
+    story.append(Spacer(1, 8))
+    story.append(Paragraph("Conclusion du Cadrage et Engagements pour la Semaine 2", s_h2))
     story.append(Paragraph(
-        "Ce premier livrable établit un cadre méthodologique, fonctionnel et architectural solide pour le projet MaintiDoc. "
-        "Les besoins métiers ont été traduits en cas d'usage vérifiables, le corpus documentaire de 45 fiches techniques et 40 figures "
-        "est intégralement tracé et vérifié, et l'architecture cible intègre nativement la sécurité (RBAC, Evidence Checking, HITL MCP). "
-        "Dès le démarrage de la Semaine 2, l'équipe s'attellera au développement du pipeline ETL d'ingestion, à l'évaluation de l'OCR sur "
-        "les deux documents scannés et au déploiement de l'index vectoriel Qdrant.", s_body))
+        "Ce Livrable 1 fige les bases méthodologiques et architecturales indispensables à la réussite de MaintiDoc. "
+        "En abordant le projet sous l'angle de la réalité d'atelier (défis combinés d'instruments vs liaison au sol), "
+        "nous garantissons que le système ne sera pas un jouet théorique mais un assistant technique robuste. "
+        "Les pièges documentaires introduits (contradictions de fluides, injection de prompt masquée, scans sans calque texte) "
+        "constituent notre banc d'essai pour démontrer la supériorité d'une architecture agentique étanche.", s_body))
 
     concl_box = (
-        "<b>Engagements de l'équipe pour la Semaine 2 :</b><br/>"
-        "• Dépôt Git structuré avec environnement virtuel reproductible (Poetry / requirements.txt sans conflits).<br/>"
-        "• Pipeline d'ingestion PyMuPDF + Surya OCR validé sur les documents dégradés.<br/>"
-        "• Index Qdrant opérationnel avec recherche dense/sparse et pré-filtrage des groupes d'accès.<br/>"
-        "• Zéro secret (clé API, token) commité dans le dépôt public de l'équipe."
+        "<b>Engagements immédiats de l'équipe pour le Livrable 2 :</b><br/>"
+        "• Dépôt Git documenté avec environnement virtuel reproductible (requirements.txt standardisé).<br/>"
+        "• Pipeline d'ingestion PyMuPDF opérationnel avec extraction d'éléments visuels et segmentation sémantique.<br/>"
+        "• Évaluation rigoureuse de l'OCR local sur les deux rapports scannés dégradés (tdb_19 et pne_12).<br/>"
+        "• Base vectorielle Qdrant opérationnelle avec pré-filtrage RBAC validé par tests unitaires automatisés."
     )
-    story.append(make_box(Paragraph(concl_box, s_callout), bg_color='#EFF6FF', border_color='#3B82F6'))
+    story.append(make_box(Paragraph(concl_box, s_callout), bg_color='#F1F5F9', border_color='#3B82F6'))
 
     story.append(PageBreak())
 
     # =========================================================================
-    # PAGES 14-15 : ANNEXES TECHNIQUES (INVENTAIRE CONDENSÉ DU CORPUS)
+    # PAGES 14-15 : ANNEXES TECHNIQUES (INVENTAIRE COMPLET CONDENSÉ)
     # =========================================================================
     story.append(Paragraph("Annexes Techniques : Registre d'Inventaire du Corpus MaintiDoc", s_h1))
     story.append(Paragraph(
-        "Extrait condensé des 45 documents figurant dans le fichier d'inventaire normalisé <code>corpus/inventaire.csv</code> :", s_body))
+        "Extrait condensé des 45 documents figurant dans le fichier d'inventaire officiel <code>corpus/inventaire.csv</code> :", s_body))
 
-    # We read the first 23 rows (TDB) for Page 14
     with open("corpus/inventaire.csv", "r", encoding="utf-8") as f_inv:
-        import csv
         reader = list(csv.DictReader(f_inv))
 
     inv_table_p1_data = [
@@ -1172,17 +1170,17 @@ def build_pdf(filename="L1_MaintiDoc_ELAOUAZI-SOUILI-YEKHLEF_Rapport.pdf"):
             Paragraph(row['type_document'], s_table_cell),
             Paragraph(row['format'], s_table_cell),
             Paragraph(f"<b>{row['usage_test']}</b>" if row['usage_test'] != 'normal' else "normal", 
-                      ParagraphStyle('UT', parent=s_table_cell, textColor=c_alert if row['usage_test'] != 'normal' else c_dark)),
+                      ParagraphStyle('UT', parent=s_table_cell, textColor=c_alert if row['usage_test'] != 'normal' else c_navy)),
             Paragraph(row['verifie_par'], s_table_cell)
         ])
 
-    t_inv_p1 = Table(inv_table_p1_data, colWidths=[115, 145, 75, 55, 45, 45, 28])
+    t_inv_p1 = Table(inv_table_p1_data, colWidths=[115, 145, 75, 55, 45, 45, 25])
     t_inv_p1.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), c_primary),
+        ('BACKGROUND', (0,0), (-1,0), c_navy),
         ('BOX', (0,0), (-1,-1), 1, c_border),
         ('INNERGRID', (0,0), (-1,-1), 0.5, c_border),
-        ('TOPPADDING', (0,0), (-1,-1), 1.8),
-        ('BOTTOMPADDING', (0,0), (-1,-1), 1.8),
+        ('TOPPADDING', (0,0), (-1,-1), 1.6),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 1.6),
     ]))
     story.append(t_inv_p1)
 
@@ -1202,36 +1200,38 @@ def build_pdf(filename="L1_MaintiDoc_ELAOUAZI-SOUILI-YEKHLEF_Rapport.pdf"):
             Paragraph(row['type_document'], s_table_cell),
             Paragraph(row['format'], s_table_cell),
             Paragraph(f"<b>{row['usage_test']}</b>" if row['usage_test'] != 'normal' else "normal", 
-                      ParagraphStyle('UT', parent=s_table_cell, textColor=c_alert if row['usage_test'] != 'normal' else c_dark)),
+                      ParagraphStyle('UT', parent=s_table_cell, textColor=c_alert if row['usage_test'] != 'normal' else c_navy)),
             Paragraph(row['verifie_par'], s_table_cell)
         ])
 
-    t_inv_p2 = Table(inv_table_p2_data, colWidths=[115, 145, 75, 55, 45, 45, 28])
+    t_inv_p2 = Table(inv_table_p2_data, colWidths=[115, 145, 75, 55, 45, 45, 25])
     t_inv_p2.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), c_primary),
+        ('BACKGROUND', (0,0), (-1,0), c_navy),
         ('BOX', (0,0), (-1,-1), 1, c_border),
         ('INNERGRID', (0,0), (-1,-1), 0.5, c_border),
-        ('TOPPADDING', (0,0), (-1,-1), 1.8),
-        ('BOTTOMPADDING', (0,0), (-1,-1), 1.8),
+        ('TOPPADDING', (0,0), (-1,-1), 1.6),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 1.6),
     ]))
     story.append(t_inv_p2)
 
-    story.append(Spacer(1, 15))
+    story.append(Spacer(1, 10))
     validation_sign = [
-        [Paragraph("<b>Approbation et Visa de l'Équipe MaintiDoc :</b>", s_body_bold)],
-        [Paragraph("Nous certifions sur l'honneur que l'ensemble des documents figurant dans cet inventaire a fait l'objet "
-                   "d'une vérification critique, qu'aucune donnée personnelle réelle n'a été utilisée, et que les cas de test "
-                   "spécifiques (contradictoires, injection, scans) sont correctement isolés.", s_callout)],
+        [Paragraph("<b>Engagement et Certification de l'Équipe MaintiDoc :</b>", s_body_bold)],
+        [Paragraph("Nous certifions sur l'honneur que l'ensemble des 45 documents du corpus a fait l'objet d'une vérification "
+                   "humaine rigoureuse, qu'aucune donnée personnelle réelle n'a été insérée, et que les cas de test "
+                   "(contradictions, injection de prompt, scans dégradés) sont formellement isolés et documentés.", s_callout)],
         [Paragraph("<b>SOUILI Wiam</b> (Signé) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "
                    "<b>YEKHLEF Aya</b> (Signé) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "
-                   "<b>ELAOUAZI Hafsa</b> (Signé)", ParagraphStyle('Sig', parent=s_body_bold, textColor=c_primary))]
+                   "<b>ELAOUAZI Hafsa</b> (Signé)", ParagraphStyle('Sig', parent=s_body_bold, textColor=c_blue))]
     ]
-    t_sign = Table(validation_sign, colWidths=[508])
+    t_sign = Table(validation_sign, colWidths=[505])
     t_sign.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#F8FAFC')),
+        ('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#FFFFFF')),
         ('BOX', (0,0), (-1,-1), 1, c_border),
-        ('TOPPADDING', (0,0), (-1,-1), 6),
-        ('BOTTOMPADDING', (0,0), (-1,-1), 6),
+        ('TOPPADDING', (0,0), (-1,-1), 5),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 5),
+        ('LEFTPADDING', (0,0), (-1,-1), 8),
+        ('RIGHTPADDING', (0,0), (-1,-1), 8),
     ]))
     story.append(t_sign)
 
@@ -1240,4 +1240,3 @@ def build_pdf(filename="L1_MaintiDoc_ELAOUAZI-SOUILI-YEKHLEF_Rapport.pdf"):
 
 if __name__ == "__main__":
     build_pdf()
-
