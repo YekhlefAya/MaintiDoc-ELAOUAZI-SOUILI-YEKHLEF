@@ -1,0 +1,8 @@
+flowchart LR
+    DIAG["Diagnostic confirmé nécessitant action"] --> DRAFT["Préparation Brouillon de Ticket (Pydantic)"]
+    DRAFT --> UI_SHOW["Affichage du Ticket sur l'Interface Technicien"]
+    UI_SHOW --> USER_ACT{"Validation Technicien ?"}
+    USER_ACT -->|Refus / Modification| MODIF["Révision du brouillon"]
+    USER_ACT -->|Approbation explicite| TOKEN["Génération Approval Token & Idempotency Key"]
+    TOKEN --> CALL_MCP["Appel MCP create_ticket()"]
+    CALL_MCP --> GMAO["Création effective dans le système de maintenance"]

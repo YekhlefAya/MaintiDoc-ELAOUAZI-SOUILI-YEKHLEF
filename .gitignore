@@ -1,0 +1,62 @@
+# Secrets and Environment Variables
+.env
+.env.*
+*.env
+secrets/
+*.pem
+*.key
+*.token
+
+# Python & Virtual Environments
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Data, Model weights & Large artifacts
+*.bin
+*.pt
+*.pth
+*.onnx
+*.safetensors
+qdrant_storage/
+minio_data/
+postgres_data/
+
+# IDE & OS
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Classroom Deliverable Archive & Submissions (deposited on Classroom, not git)
+*.zip
+L1_MaintiDoc_*/
+L1_MaintiDoc_*_Rapport.pdf
+L1_MaintiDoc_*_LienGitHub.txt
+
+# Test outputs & caches
+.pytest_cache/
+.coverage
+htmlcov/
+

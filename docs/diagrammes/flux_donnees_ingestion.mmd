@@ -1,0 +1,10 @@
+flowchart LR
+    PDF["Documents PDF & Images"] --> SCAN{"PDF Scanné ?"}
+    SCAN -->|Oui| OCR["OCR Local (Surya / Tesseract)"]
+    SCAN -->|Non| PYM["Extraction PyMuPDF"]
+    OCR --> CHUNK["Découpage Sémantique (Passages & Figures)"]
+    PYM --> CHUNK
+    CHUNK --> EMB["Embeddings BGE-M3 (Texte) + SigLIP (Visuel)"]
+    EMB --> QDRANT["Indexation Qdrant (Dense + Sparse + Visuel)"]
+    CHUNK --> META["PostgreSQL (Métadonnées RBAC)"]
+    PDF --> MINIO["MinIO (Fichiers Originaux)"]
