@@ -39,6 +39,10 @@ with zipfile.ZipFile(ZIP_NAME, "w", zipfile.ZIP_DEFLATED) as zipf:
             arcname = os.path.relpath(file_path, start=".")
             zipf.write(file_path, arcname)
 
+# Clean up staging directory
+if os.path.exists(ROOT_DIR_NAME):
+    shutil.rmtree(ROOT_DIR_NAME)
+
 print(f"Created ZIP archive: {ZIP_NAME}")
 
 # Verify ZIP structure
