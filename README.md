@@ -26,24 +26,19 @@
 
 ---
 
-## 3. Contenu de l'Archive de Rendu (`L1_MaintiDoc_ELAOUAZI-SOUILI-YEKHLEF.zip`)
+## 3. Livrables du Projet
 
-Conformément aux consignes formelles du Livrable 1, l'archive contient un dossier unique racine nommé `L1_MaintiDoc_ELAOUAZI-SOUILI-YEKHLEF/` renfermant exactement les 4 éléments suivants :
+Le Livrable 1 fige l'ensemble des fondations méthodologiques, documentaires et architecturales du projet MaintiDoc :
 
-```text
-L1_MaintiDoc_ELAOUAZI-SOUILI-YEKHLEF.zip
-└── L1_MaintiDoc_ELAOUAZI-SOUILI-YEKHLEF/
-    ├── L1_MaintiDoc_ELAOUAZI-SOUILI-YEKHLEF_Rapport.pdf    # Rapport complet (10 à 15 pages hors annexes, sections 2.1 à 2.6)
-    ├── L1_MaintiDoc_ELAOUAZI-SOUILI-YEKHLEF_LienGitHub.txt  # Fichier texte contenant l'URL officielle du dépôt Git
-    ├── README.md                                           # Le présent document de synthèse
-    └── L1_MaintiDoc_ELAOUAZI-SOUILI-YEKHLEF_Corpus/       # Corpus documentaire complet (45 documents)
-        ├── inventaire.csv                                 # Inventaire exhaustif normalisé (UTF-8, 20 colonnes)
-        ├── prompts_corpus.md                              # Traçabilité des prompts P01-P13, relectures et analyse critique
-        ├── documents/
-        │   ├── famille_1/                                 # 23 documents PDF (Tableaux de bord, dont 1 piégé, 1 scanné, 1 contradictoire)
-        │   └── famille_2/                                 # 22 documents PDF (Pneumatiques, dont 1 scanné, 1 contradictoire)
-        └── images/                                        # 40 photographies et figures uniques cataloguées (1 par fiche)
-```
+1. **Rapport d'Ingénierie (`L1_MaintiDoc_ELAOUAZI-SOUILI-YEKHLEF_Rapport.pdf`) :**
+   - Document de synthèse exhaustif de 15 pages couvrant le cadrage, le corpus, l'architecture agentique cible, les flux de données, l'analyse des risques (8 risques détaillés) et la planification d'équipe (RACI).
+   - Intègre directement les 4 diagrammes d'architecture et de flux en haute définition (300 DPI) avec points de contrôle formels (PC1, PC2, PC3).
+
+2. **Corpus Documentaire Multimodal (`corpus/`) :**
+   - **45 documents techniques originaux** au format PDF (23 pour les tableaux de bord, 22 pour les pneumatiques).
+   - **40 photographies et figures uniques d'atelier** associées aux fiches techniques.
+   - **`inventaire.csv` :** Registre complet normalisé selon les 20 colonnes prescrites.
+   - **`prompts_corpus.md` :** Traçabilité exhaustive des prompts P01-P13, relectures d'équipe et analyse critique des hallucinations.
 
 ---
 
@@ -58,23 +53,13 @@ Arborescence minimale attendue et respectée :
 maintidoc/
 ├── README.md
 ├── .gitignore
-├── docs/
-│   └── diagrammes/
-│       ├── architecture_cible.mmd          # Source Mermaid de l'architecture fonctionnelle
-│       ├── architecture_cible.png          # Rendu haute définition (300 DPI)
-│       ├── flux_donnees_ingestion.mmd      # Source Mermaid du pipeline ETL multimodal
-│       ├── flux_donnees_ingestion.png      # Schéma haute définition du flux d'ingestion
-│       ├── flux_requete_rag.mmd            # Source Mermaid du parcours de requête
-│       ├── flux_requete_rag.png            # Schéma haute définition du flux RAG
-│       ├── flux_creation_ticket_mcp.mmd    # Source Mermaid du workflow MCP sécurisé
-│       └── flux_creation_ticket_mcp.png    # Schéma haute définition du Human-in-the-Loop
 └── corpus/
-    ├── inventaire.csv                      # Registre d'inventaire complet synchronisé
-    ├── prompts_corpus.md                   # Historique des prompts et validation critique
+    ├── inventaire.csv                      # Registre d'inventaire complet synchronisé (20 colonnes)
+    ├── prompts_corpus.md                   # Historique des prompts P01-P13 et validation critique
     ├── documents/
-    │   ├── famille_1/                      # Documents Tableaux de bord
-    │   └── famille_2/                      # Documents Pneumatiques
-    └── images/                             # Banque d'images associées aux documents
+    │   ├── famille_1/                      # 23 documents PDF (Tableaux de bord)
+    │   └── famille_2/                      # 22 documents PDF (Pneumatiques)
+    └── images/                             # 40 photographies et figures uniques d'atelier
 ```
 
 ---
